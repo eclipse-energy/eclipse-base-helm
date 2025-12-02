@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-timescaledb
+spec:
+  replicas: {{ .Values.timescaledb.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-timescaledb
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-timescaledb
+    spec:
+      containers:
+        - name: timescaledb
+          image: {{ .Values.timescaledb.image.name }}:{{ .Values.timescaledb.image.version }}
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: eclipse-backend
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.timescaledb.secret.name }}
+                  key: {{ .Values.timescaledb.secret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.timescaledb.secret.name }}
+                  key: {{ .Values.timescaledb.secret.passwordKey }}
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: timescaledb-pvc
+
