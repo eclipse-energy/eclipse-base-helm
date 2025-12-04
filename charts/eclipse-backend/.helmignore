@@ -21,3 +21,8 @@
 .idea/
 *.tmproj
 .vscode/
+
+Makefile
+values-local.yaml
+
+out/

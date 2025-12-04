@@ -38,5 +38,5 @@ spec:
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
-            claimName: timescaledb-pvc
+            claimName: {{ .Release.Name }}-timescaledb-pvc
 {{- end }}
