@@ -8,11 +8,11 @@ keycloak:
 
 ingress:
   enabled: false
+  host:
   path:
   tls:
     enabled: false
     clusterIssuer:
-    host:
     secretName:
 
 core:
@@ -28,8 +28,6 @@ core:
     name: ghcr.io/eclipse-energy/eclipse-backend
     version: latest
   customEnvs:
-  - name: LOGGING_LEVEL_ORG_APACHE_KAFKA
-    value: ERROR
 
 timescaledb:
   enabled: true
