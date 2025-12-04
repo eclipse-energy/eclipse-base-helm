@@ -1,0 +1,12 @@
+{{- if eq .Values.emqx.enabled true }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-emqx-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.emqx.storageSize }}
+{{- end }}

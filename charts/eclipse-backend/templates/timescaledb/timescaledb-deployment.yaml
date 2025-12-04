@@ -1,3 +1,4 @@
+{{- if eq .Values.timescaledb.enabled true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,6 +31,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.timescaledb.secret.name }}
                   key: {{ .Values.timescaledb.secret.passwordKey }}
+            {{- include "eclipse-backend.customEnvs" .Values.timescaledb.customEnvs | indent 12 }}
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
@@ -37,4 +39,4 @@ spec:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: timescaledb-pvc
-
+{{- end }}

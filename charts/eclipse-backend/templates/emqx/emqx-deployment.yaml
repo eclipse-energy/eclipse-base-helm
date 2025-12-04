@@ -1,0 +1,57 @@
+{{- if eq .Values.emqx.enabled true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-emqx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-emqx
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-emqx
+    spec:
+      containers:
+        - name: emqx
+          args: ["bin/sh", "/tmp/replace-password-with-env.sh"]
+          image: {{ .Values.emqx.image.name }}:{{ .Values.emqx.image.version }}
+          ports:
+            - name: mqtt
+              containerPort: 1883
+            - name: mqtt-tls
+              containerPort: 8883
+            - name: dashboard
+              containerPort: 18083
+          env:
+            - name: EMQX_AUTHENTICATION__1__ENDPOINT
+              value: {{ .Values.keycloak.internalHost }}/realms/{{ .Values.keycloak.realm }}/protocol/openid-connect/certs
+            - name: ECLIPSE_MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.emqx.secret.name }}
+                  key: {{ .Values.emqx.secret.passwordKey }}
+          volumeMounts:
+            - name: backend-emqx-data
+              mountPath: /opt/emqx/data
+            - name: backend-emqx-config
+              mountPath: /opt/emqx/etc/base.hocon
+              subPath: base.hocon
+            - name: backend-emqx-config
+              mountPath: /opt/emqx/etc/acl.conf
+              subPath: acl.conf
+            - name: backend-emqx-config
+              mountPath: /tmp/init-user.json
+              subPath: init-user.json
+            - name: backend-emqx-config
+              mountPath: /tmp/replace-password-with-env.sh
+              subPath: replace-password-with-env.sh
+      volumes:
+        - name: backend-emqx-config
+          configMap:
+            name: {{ .Release.Name }}-emqx-configmap
+        - name: backend-emqx-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-emqx-pvc
+{{- end }}

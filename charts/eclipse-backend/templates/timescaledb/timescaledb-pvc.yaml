@@ -1,3 +1,4 @@
+{{- if eq .Values.timescaledb.enabled true }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -8,3 +9,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.timescaledb.storageSize }}
+{{- end }}

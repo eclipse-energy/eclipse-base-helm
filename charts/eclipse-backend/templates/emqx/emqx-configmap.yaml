@@ -1,0 +1,72 @@
+{{- if eq .Values.emqx.enabled true }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-emqx-configmap
+data:
+  base.hocon: |
+    authentication = [
+      {
+        disconnect_after_expire = true
+        enable = true
+        endpoint = "REPLACED_WITH_ENV"
+        from = password
+        headers {Accept = "application/json"}
+        mechanism = jwt
+        refresh_interval = 300
+        ssl {
+          enable = false
+        }
+        use_jwks = true
+        verify_claims {
+          sub = "${username}"
+        }
+      },
+      {
+        backend = built_in_database
+        mechanism = password_based
+        password_hash_algorithm {
+          name = bcrypt
+          salt_rounds = "10"
+        }
+        user_id_type = username
+
+        bootstrap_file = "/opt/emqx/data/init-user.json"
+        bootstrap_type = plain
+      }
+    ]
+
+  acl.conf: |
+    {allow, all, subscribe, ["$users/{username}/#"]}.
+    {allow, {user, "eclipse"}, publish, ["#"]}.
+
+    {deny, all}.
+
+  init-user.json: |
+    [
+      {
+        "user_id": "eclipse",
+        "password": "REPLACED_BY_ENV",
+        "is_superuser": true
+      }
+    ]
+
+
+  replace-password-with-env.sh: |
+    #!/bin/sh
+    set -e
+
+    if [ -z "${ECLIPSE_MQTT_PASSWORD}" ]; then
+      echo "Error: ECLIPSE_MQTT_PASSWORD environment variable is not set."
+      exit 1
+    fi
+
+    PART_TO_REPLACE="REPLACED_BY_ENV"
+    INIT_USER_FILE="/tmp/init-user.json"
+    BOOTSTRAP_FILE="/opt/emqx/data/init-user.json"
+
+    sed "s|${PART_TO_REPLACE}|${ECLIPSE_MQTT_PASSWORD}|g" "${INIT_USER_FILE}" > "${BOOTSTRAP_FILE}"
+
+    exec /usr/bin/docker-entrypoint.sh emqx foreground
+
+{{- end }}

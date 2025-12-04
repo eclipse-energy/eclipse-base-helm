@@ -1,4 +1,38 @@
+imagePullSecret:
+  name: ghcr-secret
+
+keycloak:
+  internalHost:
+  externalHost:
+  realm:
+
+ingress:
+  enabled: false
+  path:
+  tls:
+    enabled: false
+    clusterIssuer:
+    host:
+    secretName:
+
+core:
+  enabled: true
+  replicaCount: 1
+  kafka:
+    sslTrustStoreSecret:
+      name: core-truststore-secret
+      passwordKey: password
+  tracing:
+    url:
+  image:
+    name: ghcr.io/eclipse-energy/eclipse-backend
+    version: latest
+  customEnvs:
+  - name: LOGGING_LEVEL_ORG_APACHE_KAFKA
+    value: ERROR
+
 timescaledb:
+  enabled: true
   replicaCount: 1
   storageSize: 5Gi
   image:
@@ -8,4 +42,15 @@ timescaledb:
     name: timescaledb-secret
     usernameKey: username
     passwordKey: password
+  customEnvs:
 
+emqx:
+  enabled: true
+  replicaCount: 1
+  storageSize: 3Gi
+  secret:
+    name: emqx-secret
+    passwordKey: password
+  image:
+    name: emqx/emqx
+    version: 5.8.6

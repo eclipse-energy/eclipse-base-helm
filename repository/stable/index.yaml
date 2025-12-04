@@ -3,7 +3,17 @@ entries:
   eclipse-backend:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2025-12-02T16:43:51.075748983+01:00"
+    created: "2025-12-04T16:16:23.410273952+01:00"
+    description: Helm Chart of the ECLIPSE Backend
+    digest: 4c0a6c3066b0bb0ed2063247c91436292388fdce79e83a78b97d24fdf87f264c
+    name: eclipse-backend
+    type: application
+    urls:
+    - https://eclipse-energy.github.io/eclipse-base-helm/stable/packages/eclipse-backend-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2025-12-04T16:16:23.410024313+01:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 19d3464f3277b04771b4533795e020d1bb7c2e7ebd80903d123d1142a031dd51
     name: eclipse-backend
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://eclipse-energy.github.io/eclipse-base-helm/stable/packages/eclipse-backend-0.0.1.tgz
     version: 0.0.1
-generated: "2025-12-02T16:43:51.075601061+01:00"
+generated: "2025-12-04T16:16:23.408079383+01:00"
