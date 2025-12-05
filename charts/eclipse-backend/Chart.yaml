@@ -3,5 +3,5 @@ name: eclipse-backend
 description: Helm Chart of the ECLIPSE Backend
 
 type: application
-version: 0.0.5
+version: 0.0.6
 appVersion: "1.0.1"

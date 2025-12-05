@@ -19,6 +19,12 @@ core:
   enabled: true
   replicaCount: 1
   kafka:
+    bootstrapServers:
+    groupId: eclipse-backend
+    saslSecret:
+      name: kafka-secret
+      usernameKey: username
+      passwordKey: password
     sslTrustStoreSecret:
       name: core-truststore-secret
       passwordKey: password

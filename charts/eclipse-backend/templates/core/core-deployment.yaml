@@ -57,6 +57,20 @@ spec:
             - name: ECLIPSE_TRACING_URL
               value: {{ .Values.core.tracing.url }}
             {{- end }}
+            - name: ECLIPSE_EDDIE_KAFKA_BOOTSTRAP_SERVERS
+              value: {{ .Values.core.kafka.bootstrapServers }}
+            - name: ECLIPSE_EDDIE_KAFKA_GROUP_ID
+              value: {{ .Values.core.kafka.groupId }}
+            - name: ECLIPSE_EDDIE_KAFKA_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.core.kafka.saslSecret.name }}
+                  key: {{ .Values.core.kafka.saslSecret.usernameKey }}
+            - name: ECLIPSE_EDDIE_KAFKA_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.core.kafka.saslSecret.name }}
+                  key: {{ .Values.core.kafka.saslSecret.passwordKey }}
             {{- include "eclipse-backend.customEnvs" .Values.core.customEnvs | indent 12 }}
           volumeMounts:
             - name: backend-truststore
