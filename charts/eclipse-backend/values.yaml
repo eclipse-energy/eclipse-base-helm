@@ -21,6 +21,7 @@ core:
   kafka:
     bootstrapServers:
     groupId: eclipse-backend
+    clientId: eclipse-backend
     saslSecret:
       name: kafka-secret
       usernameKey: username

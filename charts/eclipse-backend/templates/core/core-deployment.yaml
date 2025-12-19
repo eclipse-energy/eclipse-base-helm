@@ -61,6 +61,8 @@ spec:
               value: {{ .Values.core.kafka.bootstrapServers }}
             - name: ECLIPSE_EDDIE_KAFKA_GROUP_ID
               value: {{ .Values.core.kafka.groupId }}
+            - name: ECLIPSE_EDDIE_KAFKA_CLIENT_ID
+              value: {{ .Values.core.kafka.clientId }}
             - name: ECLIPSE_EDDIE_KAFKA_SASL_USERNAME
               valueFrom:
                 secretKeyRef:
