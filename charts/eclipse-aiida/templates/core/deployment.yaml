@@ -1,0 +1,113 @@
+{{- if eq .Values.core.enabled true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-core
+spec:
+  replicas: {{ .Values.core.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-core
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-core
+      annotations:
+        checksum/secrets: {{ include (print $.Template.BasePath "/core/secrets.yaml") . | sha256sum }}
+        checksum/timescaledb/secret: {{ include (print $.Template.BasePath "/timescaledb/secret.yaml") . | sha256sum }}
+        checksum/emqx/internal/secret: {{ include (print $.Template.BasePath "/emqx/internal/secret.yaml") . | sha256sum }}
+        checksum/emqx/external/secret: {{ include (print $.Template.BasePath "/emqx/external/secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: core
+          image: {{ .Values.core.image.name }}:{{ .Values.core.image.version }}
+          ports:
+            - name: core
+              containerPort: 8080
+          env:
+            - name: AIIDA_PUBLIC_URL
+              value: "{{ include "eclipse-aiida.core.external-host" . }}"
+
+            - name: AIIDA_DB_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-timescaledb:5432/{{ .Values.timescaledb.database }}
+            - name: AIIDA_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-timescaledb-secret
+                  key: username
+            - name: AIIDA_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-timescaledb-secret
+                  key: password
+
+            - name: AIIDA_MARKETPLACE_FEDERATOR_URL
+              value: {{ .Values.core.marketplace.federatorUrl }}
+
+            - name: AIIDA_MESSAGE_BUS_INTERNAL_DB_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-timescaledb:5432/{{ .Values.emqx.internal.db.database }}
+            - name: AIIDA_MESSAGE_BUS_INTERNAL_DB_SCHEMA
+              value: {{ .Values.emqx.internal.db.schema }}
+            - name: AIIDA_MESSAGE_BUS_INTERNAL_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-internal-secret
+                  key: databaseUsername
+            - name: AIIDA_MESSAGE_BUS_INTERNAL_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-internal-secret
+                  key: databasePassword
+            - name: AIIDA_MESSAGE_BUS_INTERNAL_MQTT_HOST
+              value: {{ .Release.Name }}-emqx-internal
+            - name: AIIDA_MESSAGE_BUS_INTERNAL_MQTT_PORT
+              value: "1883"
+            - name: AIIDA_MESSAGE_BUS_INTERNAL_MQTT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-internal-secret
+                  key: mqttUsername
+            - name: AIIDA_MESSAGE_BUS_INTERNAL_MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-internal-secret
+                  key: mqttPassword
+
+            - name: AIIDA_MESSAGE_BUS_EXTERNAL_DB_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-timescaledb:5432/{{ .Values.emqx.external.db.database }}
+            - name: AIIDA_MESSAGE_BUS_EXTERNAL_DB_SCHEMA
+              value: {{ .Values.emqx.external.db.schema }}
+            - name: AIIDA_MESSAGE_BUS_EXTERNAL_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-external-secret
+                  key: databaseUsername
+            - name: AIIDA_MESSAGE_BUS_EXTERNAL_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-external-secret
+                  key: databasePassword
+            - name: AIIDA_MESSAGE_BUS_EXTERNAL_MQTT_HOST
+              value: {{ .Release.Name }}-emqx-external
+            - name: AIIDA_MESSAGE_BUS_EXTERNAL_MQTT_PORT
+              value: "1883"
+            - name: AIIDA_MESSAGE_BUS_EXTERNAL_MQTT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-external-secret
+                  key: mqttUsername
+            - name: AIIDA_MESSAGE_BUS_EXTERNAL_MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-external-secret
+                  key: mqttPassword
+
+            {{- if and (eq .Values.ingress.enabled true) .Values.core.path }}
+            - name: SERVER_SERVLET_CONTEXT_PATH
+              value: {{ .Values.core.path }}
+            {{- end }}
+            {{- include "eclipse-aiida.customEnvs" .Values.core.customEnvs | indent 12 }}
+
+      imagePullSecrets:
+        - name: {{ .Values.ghcrImagePullSecrets.name }}
+{{- end }}

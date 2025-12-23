@@ -1,0 +1,77 @@
+{{- if eq .Values.emqx.external.enabled true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-emqx-external
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-emqx-external
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-emqx-external
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/emqx/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/emqx/external/secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: emqx
+          args: ["bin/sh", "/tmp/substitute-env.sh"]
+          image: {{ .Values.emqx.external.image.name }}:{{ .Values.emqx.external.image.version }}
+          ports:
+            - name: mqtt
+              containerPort: 1883
+            - name: mqtt-tls
+              containerPort: 8883
+            - name: dashboard
+              containerPort: 18083
+          env:
+            -
+            - name: AUTH_SERVER
+              value: timescaledb:5432
+            - name: AUTH_DATABASE
+              value: {{ .Values.emqx.external.db.database }}
+            - name: AUTH_SCHEMA
+              value: {{ .Values.emqx.external.db.schema }}
+            - name: AUTH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-external-secret
+                  key: databaseUsername
+            - name: AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-external-secret
+                  key: databasePassword
+            - name: DASHBOARD_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-external-secret
+                  key: dashboardUsername
+            - name: DASHBOARD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-emqx-external-secret
+                  key: dashboardPassword
+          volumeMounts:
+            - name: emqx-data
+              mountPath: /opt/emqx/data
+            - name: emqx-config
+              mountPath: /opt/emqx/etc/base.hocon
+              subPath: base.hocon
+            - name: emqx-config
+              mountPath: /tmp/init-user.json
+              subPath: init-user.json
+            - name: emqx-config
+              mountPath: /tmp/substitute-env.sh
+              subPath: substitute-env.sh
+      volumes:
+        - name: emqx-config
+          configMap:
+            name: {{ .Release.Name }}-emqx-configmap
+        - name: emqx-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-emqx-pvc
+{{- end }}
