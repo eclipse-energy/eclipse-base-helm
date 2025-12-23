@@ -1,11 +1,11 @@
-{{- if eq .Values.emqx.internal.enabled true }}
+{{- if eq .Values.external.enabled true }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-emqx-internal
+  name: {{ .Release.Name }}-external
 spec:
   selector:
-    app: {{ .Release.Name }}-emqx-internal
+    app: {{ .Release.Name }}-external
   ports:
     - name: mqtt
       port: 1883

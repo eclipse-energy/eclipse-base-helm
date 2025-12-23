@@ -1,10 +1,3 @@
-{{- define "eclipse-aiida.customEnvs" -}}
-{{- range . }}
-- name: {{ .name }}
-  value: {{ .value }}
-{{- end }}
-{{- end }}
-
 {{/* Helper for http protocol */}}
 {{- define "eclipse-aiida.ingress.protocol" }}
 {{- if .Values.ingress.tlsEnabled }}https{{- else }}http{{- end }}

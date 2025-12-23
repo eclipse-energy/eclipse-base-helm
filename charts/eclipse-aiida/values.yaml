@@ -2,9 +2,9 @@ ghcrImagePullSecrets:
   name: ghcr-secret
 
 ingress:
-  enabled: false
-  host:
-  tlsEnabled:
+  enabled: true
+  host: localhost
+  tlsEnabled: false
 
 core:
   enabled: true
@@ -15,11 +15,7 @@ core:
   path:
   marketplace:
     federatorUrl: "https://marketplace.eclipse-aiida.org/federator"
-  messageBus:
-    db:
-      encryptedUsername: ""
-      encryptedPassword: ""
-  customEnvs:
+  encryptedInstallerToken: ""
 
 timescaledb:
   enabled: true
@@ -31,42 +27,35 @@ timescaledb:
   database: aiida-core
   encryptedUsername: ""
   encryptedPassword: ""
-  customEnvs:
 
-emqx:
-  internal:
-    enabled: true
-    replicaCount: 1
-    storageSize: 3Gi
-    image:
-      name: emqx/emqx
-      version: 5.8.6
-    db:
-      database: emqx_internal_db
-      schema: internal
-      encryptedUsername: ""
-      encryptedPassword: ""
-    mqtt:
-      encryptedUsername: ""
-      encryptedPassword: ""
-    dashboard:
-      encryptedUsername: ""
-      encryptedPassword: ""
-  external:
-    enabled: true
-    replicaCount: 1
-    storageSize: 3Gi
-    image:
-      name: emqx/emqx
-      version: 5.8.6
-    db:
-      database: emqx_external_db
-      schema: external
-      encryptedUsername: ""
-      encryptedPassword: ""
-    mqtt:
-      encryptedUsername: ""
-      encryptedPassword: ""
-    dashboard:
-      encryptedUsername: ""
-      encryptedPassword: ""
+internal:
+  enabled: true
+  replicaCount: 1
+  storageSize: 3Gi
+  image:
+    name: emqx/emqx
+    version: 5.8.6
+  database: emqx_internal_db
+  databaseSchema: internal
+  encryptedDbUsername: ""
+  encryptedDbPassword: ""
+  encryptedMqttUsername: ""
+  encryptedMqttPassword: ""
+  encryptedDashboardUsername: ""
+  encryptedDashboardPassword: ""
+
+external:
+  enabled: true
+  replicaCount: 1
+  storageSize: 3Gi
+  image:
+    name: emqx/emqx
+    version: 5.8.6
+  database: emqx_external_db
+  databaseSchema: external
+  encryptedDbUsername: ""
+  encryptedDbPassword: ""
+  encryptedMqttUsername: ""
+  encryptedMqttPassword: ""
+  encryptedDashboardUsername: ""
+  encryptedDashboardPassword: ""
