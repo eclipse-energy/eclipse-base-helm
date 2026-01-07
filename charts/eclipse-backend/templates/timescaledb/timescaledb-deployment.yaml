@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-timescaledb
+  {{- include "eclipse-backend.timescaledb.labels" . | indent 2 }}
 spec:
   replicas: {{ .Values.timescaledb.replicaCount }}
   selector:

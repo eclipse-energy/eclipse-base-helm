@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-core
+  {{- include "eclipse-backend.core.labels" . | indent 2 }}
 spec:
   selector:
     app: {{ .Release.Name }}-core

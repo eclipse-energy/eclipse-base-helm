@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ .Release.Name }}-emqx-pvc
+  {{- include "eclipse-backend.emqx.labels" . | indent 2 }}
 spec:
   accessModes:
     - ReadWriteOnce

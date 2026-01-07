@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-emqx
+  {{- include "eclipse-backend.emqx.labels" . | indent 2 }}
 spec:
   replicas: 1
   selector:
@@ -32,6 +33,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.emqx.secret.name }}
                   key: {{ .Values.emqx.secret.passwordKey }}
+            {{- include "eclipse-backend.customEnvs" .Values.emqx.customEnvs | indent 12 }}
           volumeMounts:
             - name: backend-emqx-data
               mountPath: /opt/emqx/data

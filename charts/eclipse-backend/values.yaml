@@ -18,17 +18,30 @@ ingress:
 core:
   enabled: true
   replicaCount: 1
+  corsAllowedOrigins:
+  eddie:
+   id:
+   publicUrl:
+   vhdDataNeedId:
+   permissionMonitorSchedule: "0 0 18 * * *"
+  keycloak:
+    clientId:
   kafka:
     bootstrapServers:
     groupId: eclipse-backend
     clientId: eclipse-backend
     saslSecret:
-      name: kafka-secret
+      name: core-kafka-secret
       usernameKey: username
       passwordKey: password
     sslTrustStoreSecret:
       name: core-truststore-secret
       passwordKey: password
+    messageFormat: xml
+    cim:
+      permissionVersion: cim_0_82
+      vhdVersion: cim_0_82
+      rtrVersion: cim_0_91_08
   tracing:
     url:
   image:
@@ -59,3 +72,4 @@ emqx:
   image:
     name: emqx/emqx
     version: 5.8.6
+  customEnvs:

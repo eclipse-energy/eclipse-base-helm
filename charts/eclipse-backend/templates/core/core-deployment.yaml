@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-core
+  {{- include "eclipse-backend.core.labels" . | indent 2 }}
 spec:
   replicas: {{ .Values.core.replicaCount }}
   selector:
@@ -20,59 +21,16 @@ spec:
             - name: backend
               containerPort: 8080
           env:
-            - name: ECLIPSE_EDDIE_KAFKA_SSL_TRUST_STORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: {{ .Values.core.kafka.sslTrustStoreSecret.passwordKey }}
-                  name: {{ .Values.core.kafka.sslTrustStoreSecret.name }}
-            - name: ECLIPSE_EDDIE_KAFKA_SSL_TRUST_STORE_LOCATION
-              value: file://etc/certs/kafka/client.truststore.jks
             - name: SPRING_PROFILES_ACTIVE
               value: dockerized-backend
-            - name: ECLIPSE_DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.timescaledb.secret.name }}
-                  key: {{ .Values.timescaledb.secret.usernameKey }}
-            - name: ECLIPSE_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.timescaledb.secret.name }}
-                  key: {{ .Values.timescaledb.secret.passwordKey }}
-            - name: ECLIPSE_DB_URL
-              value: jdbc:postgresql://{{ .Release.Name }}-timescaledb:5432/eclipse-backend
-            {{- if and (eq .Values.ingress.enabled true) .Values.ingress.path }}
-            - name: SERVER_SERVLET_CONTEXT_PATH
-              value: {{ .Values.ingress.path }}
-            {{- end }}
-            {{- if .Values.keycloak.internalHost }}
-            - name: ECLIPSE_KEYCLOAK_INTERNAL_HOST
-              value: {{ .Values.keycloak.internalHost }}
-            {{- end }}
-            {{- if .Values.keycloak.externalHost }}
-            - name: ECLIPSE_KEYCLOAK_EXTERNAL_HOST
-              value: {{ .Values.keycloak.externalHost }}
-            {{- end }}
-            {{- if .Values.core.tracing.url }}
-            - name: ECLIPSE_TRACING_URL
-              value: {{ .Values.core.tracing.url }}
-            {{- end }}
-            - name: ECLIPSE_EDDIE_KAFKA_BOOTSTRAP_SERVERS
-              value: {{ .Values.core.kafka.bootstrapServers }}
-            - name: ECLIPSE_EDDIE_KAFKA_GROUP_ID
-              value: {{ .Values.core.kafka.groupId }}
-            - name: ECLIPSE_EDDIE_KAFKA_CLIENT_ID
-              value: {{ .Values.core.kafka.clientId }}
-            - name: ECLIPSE_EDDIE_KAFKA_SASL_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.core.kafka.saslSecret.name }}
-                  key: {{ .Values.core.kafka.saslSecret.usernameKey }}
-            - name: ECLIPSE_EDDIE_KAFKA_SASL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.core.kafka.saslSecret.name }}
-                  key: {{ .Values.core.kafka.saslSecret.passwordKey }}
+            {{- include "eclipse-backend.core.envs.context-path" . | indent 12 }}
+            {{- include "eclipse-backend.core.envs.db" . | indent 12 }}
+            {{- include "eclipse-backend.core.envs.cors" . | indent 12 }}
+            {{- include "eclipse-backend.core.envs.eddie" . | indent 12 }}
+            {{- include "eclipse-backend.core.envs.eddie-kafka" . | indent 12 }}
+            {{- include "eclipse-backend.core.envs.keycloak" . | indent 12 }}
+            {{- include "eclipse-backend.core.envs.mqtt" . | indent 12 }}
+            {{- include "eclipse-backend.core.envs.tracing" . | indent 12 }}
             {{- include "eclipse-backend.customEnvs" .Values.core.customEnvs | indent 12 }}
           volumeMounts:
             - name: backend-truststore
