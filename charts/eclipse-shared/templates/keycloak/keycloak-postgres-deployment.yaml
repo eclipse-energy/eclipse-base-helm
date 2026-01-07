@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-keycloak-postgres
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-keycloak-postgres
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-keycloak-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.keycloak.postgres.image.name }}:{{ .Values.keycloak.postgres.image.version }}
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: keycloak
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.keycloak.secret.name }}
+                  key: {{ .Values.keycloak.secret.postgres.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.keycloak.secret.name }}
+                  key: {{ .Values.keycloak.secret.postgres.passwordKey }}
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-keycloak-postgres-pvc

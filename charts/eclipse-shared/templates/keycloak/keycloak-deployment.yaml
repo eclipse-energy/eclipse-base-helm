@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-keycloak
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-keycloak
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: {{ .Values.keycloak.image.name }}:{{ .Values.keycloak.image.version }}
+          args: ["start-dev"]  
+          ports:
+            - name: keycloak
+              containerPort: 8080
+          env:
+            - name: KC_HTTP_RELATIVE_PATH
+              value: {{ .Values.keycloak.ingress.path }}
+            - name: KC_HOSTNAME
+              value: "{{ if eq .Values.ingress.tls.enabled true }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}{{ .Values.keycloak.ingress.path }}"
+            - name: KC_PROXY
+              value: "edge"
+            - name: KC_DB
+              value: "postgres"
+            - name: KC_DB_URL
+              value: "jdbc:postgresql://{{ .Release.Name }}-keycloak-postgres:5432/keycloak"
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.keycloak.secret.name }}
+                  key: {{ .Values.keycloak.secret.postgres.usernameKey }}
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.keycloak.secret.name }}
+                  key: {{ .Values.keycloak.secret.postgres.passwordKey }}
+          volumeMounts:
+              - name: keycloak-theme-configmap
+                mountPath: /opt/keycloak/themes/eclipse-theme/
+      volumes:
+        - name: keycloak-theme-configmap
+          configMap:
+            name: {{ .Release.Name }}-keycloak-theme-configmap
+            items:
+              - key: theme.properties
+                path: login/theme.properties
+              - key: styles.css
+                path: login/resources/css/styles.css
+              - key: eclipse.svg
+                path: login/resources/images/eclipse.svg
+
