@@ -1,0 +1,39 @@
+ghcrImagePullSecrets:
+  name: "ghcr-secret"
+
+core:
+  replicaCount: 1
+  version: "latest"
+  port: 8010
+  overrideHostWithIp: false
+  repositoryTrack: "stable"
+  storageSize: "1Mi"
+
+aiidaServices:
+  namespace: "aiida-services"
+
+aiida:
+
+secrets:
+  core:
+    encryptedInstallerToken: "*"
+
+  timescaledb:
+    encryptedUsername: "*?" # Only change during initial installation!
+    encryptedPassword: "*?" # Only change during initial installation!
+
+  internal:
+    encryptedDbUsername: "*?" # Only change during initial installation!
+    encryptedDbPassword: "*?" # Only change during initial installation!
+    encryptedMqttUsername: "*"
+    encryptedMqttPassword: "*"
+    encryptedDashboardUsername: "*"
+    encryptedDashboardPassword: "*"
+
+  external:
+    encryptedDbUsername: "*?" # Only change during initial installation!
+    encryptedDbPassword: "*?" # Only change during initial installation!
+    encryptedMqttUsername: "*"
+    encryptedMqttPassword: "*"
+    encryptedDashboardUsername: "*"
+    encryptedDashboardPassword: "*"
