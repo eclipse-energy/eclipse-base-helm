@@ -1,0 +1,206 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-keycloak-theme-configmap
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
+data:
+  eclipse.svg: |
+    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1000 1000">
+      <defs>
+        <style>
+          .cls-1 {
+            fill: url(#linear-gradient);
+          }
+
+          .cls-2 {
+            fill: url(#linear-gradient-2);
+          }
+
+          .cls-3 {
+            fill: url(#linear-gradient-3);
+          }
+
+          .cls-4 {
+            fill: url(#linear-gradient-4);
+          }
+
+          .cls-5 {
+            fill: url(#linear-gradient-5);
+          }
+
+          .cls-6 {
+            fill: url(#linear-gradient-8);
+          }
+
+          .cls-7 {
+            fill: url(#linear-gradient-9);
+          }
+
+          .cls-8 {
+            fill: url(#linear-gradient-10);
+          }
+
+          .cls-9 {
+            fill: url(#linear-gradient-11);
+          }
+
+          .cls-10 {
+            fill: url(#linear-gradient-12);
+          }
+
+          .cls-11 {
+            fill: url(#linear-gradient-13);
+          }
+        </style>
+        <linearGradient id="linear-gradient" x1="316.97" y1="533.04" x2="774.73" y2="533.04" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#002b7f"/>
+          <stop offset="1" stop-color="#a2bd3f"/>
+        </linearGradient>
+        <linearGradient id="linear-gradient-2" x1="316.97" y1="533.1" x2="774.73" y2="533.1" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-3" x1="316.97" y1="521.17" x2="774.73" y2="521.17" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-4" x1="316.97" y1="519.61" x2="774.73" y2="519.61" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-5" x1="316.97" y1="544.2" x2="774.73" y2="544.2" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-8" x1="-2906.28" y1="632.79" x2="-3182.98" y2="632.79" gradientTransform="translate(-2797.99 1300.97) rotate(179.94)" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-9" x1="-2906.28" y1="898.48" x2="-3182.98" y2="898.48" gradientTransform="translate(-2797.99 1300.97) rotate(179.94)" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-10" x1="-2913.9" y1="681.61" x2="-3190.6" y2="681.61" gradientTransform="translate(-2797.99 1300.97) rotate(179.94)" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-11" x1="-2913.9" y1="765.64" x2="-3190.6" y2="765.64" gradientTransform="translate(-2797.99 1300.97) rotate(179.94)" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-12" x1="-2913.9" y1="849.67" x2="-3190.6" y2="849.67" gradientTransform="translate(-2797.99 1300.97) rotate(179.94)" xlink:href="#linear-gradient"/>
+        <linearGradient id="linear-gradient-13" x1="-2913.9" y1="765.64" x2="-3190.6" y2="765.64" gradientTransform="translate(-2797.99 1300.97) rotate(179.94)" xlink:href="#linear-gradient"/>
+      </defs>
+      <g>
+        <path class="cls-1" d="M389.73,536.54H327.07c1.3,13.88,11.42,23,26.08,23,12.19,0,21.14-6.36,24.52-16.48l9.47,5.06c-5.32,13.49-17.52,21.67-34,21.67-22.19,0-36.85-14.67-36.85-36.72s14.66-36.72,36.85-36.72c21.92,0,36.71,14.66,36.71,36.72A31.5,31.5,0,0,1,389.73,536.54Zm-10.51-7.13c-1.16-14.15-11.28-23.36-26.07-23.36s-25,9.21-26.21,23.36Z"/>
+        <path class="cls-2" d="M466.85,542h10.38c-3.11,17-16.73,27.77-35.54,27.77-22.19,0-36.85-14.67-36.85-36.72s14.66-36.59,36.85-36.59c18.81,0,32.3,10.77,35.54,27.77H466.85c-3.24-10.9-12.32-17.52-25.16-17.52-16,0-26.47,10.51-26.47,26.34s10.51,26.47,26.47,26.47C454.53,559.51,463.61,552.76,466.85,542Z"/>
+        <path class="cls-3" d="M495.35,568.46V473.88H505.6v94.58Z"/>
+        <path class="cls-4" d="M524.87,478c0-4.41,3.11-7.27,7.91-7.27s7.92,2.86,7.92,7.27-3.12,7-7.92,7S524.87,482.44,524.87,478Zm2.72,90.43V497.62H538v70.84Z"/>
+        <path class="cls-5" d="M631.72,533c0,22.05-15.18,36.72-36.19,36.72-12.85,0-22.19-5.58-27.12-14.54v36.85H558.16V533c0-22.06,14.66-36.72,36.72-36.72S631.72,511,631.72,533Zm-10.38,0c0-16-10.5-26.47-26.46-26.47S568.41,517.08,568.41,533s10.64,26.47,26.47,26.47S621.34,549,621.34,533Z"/>
+        <path class="cls-1" d="M672.52,506.44c-7.4,0-13.89,2.6-13.89,9.08,0,16,39.19,9.09,39.19,32.7,0,13-11.81,21.54-27.25,21.54-11.29,0-21-4.55-26.6-10.12l4.8-8.31c5.32,4.8,14.92,8,23.1,8s14.66-3,14.66-10.77c0-16.61-39.31-9.21-39.31-33.22,0-13.36,12.45-19.07,25.43-19.07,10.12,0,19.85,3.5,24.26,8.31l-5.58,7.91C688.09,509,679.91,506.44,672.52,506.44Z"/>
+        <path class="cls-1" d="M785.73,536.54H723.07c1.29,13.88,11.41,23,26.07,23,12.2,0,21.15-6.36,24.53-16.48l9.47,5.06c-5.32,13.49-17.52,21.67-34,21.67-22.18,0-36.84-14.67-36.84-36.72s14.66-36.72,36.84-36.72c21.93,0,36.72,14.66,36.72,36.72A31.5,31.5,0,0,1,785.73,536.54Zm-10.51-7.13c-1.17-14.15-11.29-23.36-26.08-23.36s-25,9.21-26.2,23.36Z"/>
+      </g>
+      <path class="cls-6" d="M329.66,628.43a7,7,0,0,1,7,7l.06,59.47a7,7,0,0,1-13.92,0l-.06-59.47A7,7,0,0,1,329.66,628.43Z"/>
+      <path class="cls-7" d="M329.4,362.73a7,7,0,0,1,7,6.95l.06,59.47a7,7,0,0,1-13.92,0l-.06-59.47A7,7,0,0,1,329.4,362.73Z"/>
+      <path class="cls-8" d="M264.34,598.29a7,7,0,0,1,4.93,11.88l-22.21,22.25a7,7,0,1,1-9.85-9.83l22.22-22.25A6.91,6.91,0,0,1,264.34,598.29Z"/>
+      <path class="cls-9" d="M174.6,525.47l59.47-.06a7,7,0,1,1,0,13.92l-59.47,0a7,7,0,1,1,0-13.91Z"/>
+      <path class="cls-10" d="M271.17,459.42a7,7,0,0,1-11.88,4.93L237,442.14a7,7,0,1,1,9.83-9.85l22.25,22.21A7,7,0,0,1,271.17,459.42Z"/>
+      <path class="cls-11" d="M339.29,616.68a84.25,84.25,0,0,0,65.11-30.77,72.07,72.07,0,1,1-.11-107.41,84.41,84.41,0,1,0-65,138.18Z"/>
+    </svg>
+
+  styles.css: |
+    a {
+        color: #50735f;
+    }
+    .login-pf {
+        background: lightgrey;
+    }
+    .login-pf-page {
+        display: flex;
+        justify-content: center;
+        padding-top: unset;
+    }
+
+    .login-pf body {
+        background: lightgrey;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        font-family: sans-serif;
+        justify-content: center;
+        line-height: 1.5;
+        margin: 0;
+        height: 100%;
+
+        /* landscape mode */
+        @media screen and (max-height: 700px) {
+           height: unset;
+        }
+    }
+
+    .login-pf-page-header{
+        display: none;
+    }
+
+    .card-pf {
+        background-color: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
+        padding: 1rem 2rem !important;
+        width: 100%;
+        margin-inline: 1rem;
+
+        @media screen and (min-width: 640px) {
+            width: 50rem;
+        }
+
+        /* landscape mode */
+        @media screen and (max-height: 700px) {
+            width: 100%;
+            margin-top: 3rem;
+            margin-bottom: 3rem !important;
+        }
+    }
+
+    .login-pf-header {
+        background-image: url('../images/eclipse.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100px;
+        background-size: 45%;
+
+        @media screen and (min-width: 640px) {
+            height: 200px;
+        }
+
+        /* landscape mode */
+        @media screen and (max-height: 700px) {
+            height: 100px;
+        }
+    }
+
+    .login-pf-page .login-pf-page-header {
+        margin-bottom: unset;
+    }
+
+    #kc-header-wrapper {
+        visibility: hidden;
+    }
+
+    #kc-page-title {
+        visibility: hidden;
+    }
+
+    input {
+        border: 0.1rem solid lightgrey;
+        border-radius: 0.5rem;
+        box-sizing: border-box;
+        display: block;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    .checkbox input[type=checkbox] {
+        margin-left: -60px;
+    }
+
+    .pf-c-button.pf-m-primary {
+        background-image: linear-gradient(to right, #002b7f, #a2bd3f);
+        color: white;
+    }
+
+    .pf-c-form__label-text {
+        font-size: 16px;
+    }
+
+    .btn-lg {
+        border-radius: 1rem;
+        border: none;
+        font-size: 1.5rem;
+        margin: 1.5rem 0;
+        padding: 1rem;
+        width: 100%;
+    }
+      
+  theme.properties: |
+    parent=keycloak
+    import=common/keycloak
+    styles=css/styles.css
+

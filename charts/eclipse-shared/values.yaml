@@ -1,0 +1,31 @@
+keycloak:
+  image:
+    name: quay.io/keycloak/keycloak
+    version: 26.2
+
+  secret:
+    name: keycloak-secret
+    postgres:
+      usernameKey: postgres-username
+      passwordKey: postgres-password
+
+  postgres:
+    image:
+      name: postgres
+      version: 17.6
+    storageSize: 5Gi
+    customEnvs:
+
+  ingress:
+    path: /iam
+
+  customEnvs:
+
+ingress:
+  enabled: false
+  host:
+  path:
+  tls:
+    enabled: false
+    clusterIssuer:
+    secretName:
