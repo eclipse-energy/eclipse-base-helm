@@ -22,7 +22,6 @@ Metadata for eclipse-backend components.
 */}}
 {{- define "eclipse-shared.labels" }}
   generator: helm
-  date: {{ now | htmlDate }}
   chart: {{ .Chart.Name }}
   version: {{ .Chart.Version }}
 {{- end }}
