@@ -1,0 +1,11 @@
+{{- if eq .Values.timescaledb.enabled true }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-timescaledb
+spec:
+  selector:
+    app: {{ .Release.Name }}-timescaledb
+  ports:
+    - port: 5432
+{{- end }}

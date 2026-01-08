@@ -1,0 +1,7 @@
+apiVersion: v2
+name: eclipse-aiida
+description: Helm Chart of ECLIPSE AIIDA
+
+type: application
+version: 0.0.1
+appVersion: "0.0.1"

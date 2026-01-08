@@ -1,0 +1,19 @@
+{{- if eq .Values.external.enabled true }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-external
+spec:
+  selector:
+    app: {{ .Release.Name }}-external
+  ports:
+    - name: mqtt
+      port: 1883
+      targetPort: mqtt
+    - name: mqtt-tls
+      port: 8883
+      targetPort: mqtt-tls
+    - name: dashboard
+      port: 18083
+      targetPort: dashboard
+{{- end }}

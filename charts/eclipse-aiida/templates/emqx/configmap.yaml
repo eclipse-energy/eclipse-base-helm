@@ -1,0 +1,163 @@
+{{- if or (eq .Values.external.enabled true) (eq .Values.internal.enabled true) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-emqx-configmap
+data:
+  base.hocon: |
+    listeners.ssl.default.enable = false
+    listeners.ws.default.enable  = false
+    listeners.wss.default.enable = false
+    dashboard {
+      default_username = "DASHBOARD_USERNAME"
+      default_password = "DASHBOARD_PASSWORD"
+    }
+    authentication = [
+      {
+        backend = postgresql
+        # Replaced with .env file
+        database = AUTHENTICATION_DATABASE
+        disable_prepared_statements = false
+        enable = true
+        mechanism = password_based
+        # Replaced with .env file
+        password = "AUTHENTICATION_PASSWORD"
+        password_hash_algorithm {
+          name = bcrypt
+        }
+        pool_size = 5
+        query = """~
+        SELECT password_hash
+            FROM AUTHENTICATION_SCHEMA.mqtt_user
+            WHERE username = ${username} LIMIT 1;~"""
+        # Replaced with .env file
+        server = "AUTHENTICATION_SERVER"
+        ssl {
+          ciphers = []
+          depth = 10
+          enable = false
+          hibernate_after = "5s"
+          log_level = notice
+          reuse_sessions = true
+          secure_renegotiate = true
+          verify = verify_peer
+          versions = [
+            "tlsv1.3",
+            "tlsv1.2"
+          ]
+        }
+        username = "AUTHENTICATION_USERNAME"
+      }
+    ]
+    authorization {
+      cache {
+        enable = true
+        excludes = []
+        max_size = 32
+        ttl = "1m"
+      }
+      deny_action = ignore
+      no_match = deny
+      sources = [
+        {
+          # Replaced with .env file
+          database = AUTHORIZATION_DATABASE
+          disable_prepared_statements = false
+          enable = true
+          # Replaced with .env file
+          password = "AUTHORIZATION_PASSWORD"
+          pool_size = 8
+          query = """~
+            SELECT permission, action, topic
+              FROM AUTHORIZATION_SCHEMA.mqtt_acl
+              WHERE username = ${username}
+              ORDER BY id DESC;~"""
+          # Replaced with .env file
+          server = "AUTHORIZATION_SERVER"
+          ssl {
+            ciphers = []
+            depth = 10
+            enable = false
+            hibernate_after = "5s"
+            log_level = notice
+            reuse_sessions = true
+            secure_renegotiate = true
+            verify = verify_peer
+            versions = [
+              "tlsv1.3",
+              "tlsv1.2"
+            ]
+          }
+          type = postgresql
+          username = "AUTHORIZATION_USERNAME"
+        }
+      ]
+    }
+
+  substitute-env.sh: |
+    #!/bin/sh
+    set -e
+
+    # Portable in-place sed (-i for GNU, -i '' for BSD/macOS)
+    _sed_in_place() {
+      if sed --version >/dev/null 2>&1; then
+        sed -i "$@"
+      else
+        # BSD/macOS sed
+        sed -i '' "$@"
+      fi
+    }
+
+    # Substitute mappings of PLACEHOLDER::ENVVAR into a target file
+    substitute_envs() {
+      local parts="$1"
+      local target_file="$2"
+
+      # iterate over whitespace-separated lines
+      for pair in $parts; do
+        # trim leading/trailing whitespace
+        pair=$(printf "%s" "$pair" | xargs)
+        [ -z "$pair" ] && continue
+
+        key=$(printf "%s" "$pair" | awk -F'::' '{print $1}')
+        varname=$(printf "%s" "$pair" | awk -F'::' '{print $2}')
+        eval value=\$$varname
+
+        if [ -z "$value" ]; then
+          echo "Warning: env var $varname not set; skipping replacement for $key"
+          continue
+        fi
+
+        _sed_in_place "s|$key|$value|g" "$target_file"
+      done
+    }
+
+    # Substitute envs at emqx.hocon
+    PARTS_TO_REPLACE="
+    AUTHENTICATION_SERVER::AUTH_SERVER
+    AUTHENTICATION_DATABASE::AUTH_DATABASE
+    AUTHENTICATION_SCHEMA::AUTH_SCHEMA
+    AUTHENTICATION_USERNAME::AUTH_USERNAME
+    AUTHENTICATION_PASSWORD::AUTH_PASSWORD
+    AUTHORIZATION_SERVER::AUTH_SERVER
+    AUTHORIZATION_DATABASE::AUTH_DATABASE
+    AUTHORIZATION_SCHEMA::AUTH_SCHEMA
+    AUTHORIZATION_USERNAME::AUTH_USERNAME
+    AUTHORIZATION_PASSWORD::AUTH_PASSWORD
+    DASHBOARD_USERNAME::DASHBOARD_USERNAME
+    DASHBOARD_PASSWORD::DASHBOARD_PASSWORD
+    "
+
+    INIT_USER_FILE="/tmp/base.hocon"
+    ADAPTED_USER_FILE="/tmp/adapted-base.hocon"
+    BOOTSTRAP_FILE="/opt/emqx/etc/base.hocon"
+
+    # Copy source file first
+    cp "$INIT_USER_FILE" "$ADAPTED_USER_FILE"
+    # Substitute
+    substitute_envs "$PARTS_TO_REPLACE" "$ADAPTED_USER_FILE"
+    # Copy file to correct place
+    cp "$ADAPTED_USER_FILE" "$BOOTSTRAP_FILE"
+
+    exec /usr/bin/docker-entrypoint.sh emqx foreground
+    {{- end }}

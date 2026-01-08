@@ -1,0 +1,79 @@
+{{- if eq .Values.timescaledb.enabled true }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-timescaledb-configmap
+data:
+  emqx-init-schema.sql: |
+    -- Create the database (manual setup phase)
+    CREATE DATABASE EMQX_DATABASE;
+    \c EMQX_DATABASE
+
+  substitute-env.sh: |
+    #!/bin/sh
+    set -e
+
+    # Portable in-place sed (-i for GNU, -i '' for BSD/macOS)
+    _sed_in_place() {
+      if sed --version >/dev/null 2>&1; then
+        sed -i "$@"
+      else
+        # BSD/macOS sed
+        sed -i '' "$@"
+      fi
+    }
+
+    # Substitute mappings of PLACEHOLDER::ENVVAR into a target file
+    substitute_envs() {
+      local parts="$1"
+      local target_file="$2"
+
+      # iterate over whitespace-separated lines
+      for pair in $parts; do
+        # trim leading/trailing whitespace
+        pair=$(printf "%s" "$pair" | xargs)
+        [ -z "$pair" ] && continue
+
+        key=$(printf "%s" "$pair" | awk -F'::' '{print $1}')
+        varname=$(printf "%s" "$pair" | awk -F'::' '{print $2}')
+        eval value=\$$varname
+
+        if [ -z "$value" ]; then
+          echo "Warning: env var $varname not set; skipping replacement for $key"
+          continue
+        fi
+
+        _sed_in_place "s|$key|$value|g" "$target_file"
+      done
+    }
+
+    # Substitute envs at emqx-init-schema.sql
+    PARTS_TO_REPLACE="
+    EMQX_DATABASE::INTERNAL_EMQX_DATABASE
+    "
+
+    INIT_USER_FILE="/tmp/emqx-init-schema.sql"
+    BOOTSTRAP_FILE="/tmp/internal-emqx-init-schema.sql"
+
+    # Copy source file first
+    cp "$INIT_USER_FILE" "$BOOTSTRAP_FILE"
+
+    substitute_envs "$PARTS_TO_REPLACE" "$BOOTSTRAP_FILE"
+
+    psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f ${BOOTSTRAP_FILE}
+
+    # Substitute envs at emqx-init-schema.sql
+    PARTS_TO_REPLACE="
+    EMQX_DATABASE::EXTERNAL_EMQX_DATABASE
+    "
+
+    INIT_USER_FILE="/tmp/emqx-init-schema.sql"
+    BOOTSTRAP_FILE="/tmp/external-emqx-init-schema.sql"
+
+    # Copy source file first
+    cp "$INIT_USER_FILE" "$BOOTSTRAP_FILE"
+
+    substitute_envs "$PARTS_TO_REPLACE" "$BOOTSTRAP_FILE"
+
+    psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f ${BOOTSTRAP_FILE}
+    {{- end }}
