@@ -97,11 +97,11 @@ kubectl -n "$NAMESPACE" create secret docker-registry ghcr-secret \
 	  --docker-password="$GHCR_PAT"
 
 ### INSTALL AIIDA INSTALLER
-helm repo add aiida "https://eddie-energy.github.io/aiida-helm/$TRACK" --force-update
+helm repo add eclipse "https://eclipse-energy.github.io/eclipse-base-helm/$TRACK" --force-update
 
-helm install aiida-installer \
+helm install eclipse-aiida-installer \
   --namespace "$NAMESPACE" \
   --set core.services.namespace="$SERVICES_NAMESPACE" \
   --set core.services.repositoryTrack="$TRACK" \
   --values "$VALUES" \
-  aiida/aiida-installer
+  eclipse/eclipse-aiida-installer

@@ -17,7 +17,7 @@ spec:
       serviceAccountName: {{ .Release.Name }}-sa
       containers:
         - name: {{ .Release.Name }}
-          image: "ghcr.io/eddie-energy/aiida-installer:{{ .Values.core.version }}"
+          image: "ghcr.io/eclipse-energy/eclipse-aiida-installer:{{ .Values.core.version }}"
           ports:
             - containerPort: {{ .Values.core.port }}
               name: core
