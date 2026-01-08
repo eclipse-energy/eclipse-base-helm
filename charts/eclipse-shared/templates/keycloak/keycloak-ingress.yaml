@@ -19,7 +19,7 @@ spec:
               service:
                 name: {{ .Release.Name }}-keycloak
                 port:
-                  name: {{ .Release.Name }}-keycloak
+                  name: keycloak
 
   {{- if eq .Values.ingress.tls.enabled true }}
   tls:
