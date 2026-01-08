@@ -13,10 +13,6 @@ data:
     #!/bin/sh
     set -e
 
-    set -a
-    . /tmp/shared/.env
-    set +a
-
     # Portable in-place sed (-i for GNU, -i '' for BSD/macOS)
     _sed_in_place() {
       if sed --version >/dev/null 2>&1; then

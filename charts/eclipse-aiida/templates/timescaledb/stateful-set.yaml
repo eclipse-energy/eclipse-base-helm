@@ -58,6 +58,7 @@ spec:
         - name: timescaledb-config
           configMap:
             name: {{ .Release.Name }}-timescaledb-configmap
+            defaultMode: 0755
 
   volumeClaimTemplates:
     - metadata:
