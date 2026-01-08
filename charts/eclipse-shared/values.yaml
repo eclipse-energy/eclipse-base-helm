@@ -14,9 +14,12 @@ keycloak:
       name: postgres
       version: 17.6
     storageSize: 5Gi
+    customEnvs:
 
   ingress:
     path: /iam
+
+  customEnvs:
 
 ingress:
   enabled: false

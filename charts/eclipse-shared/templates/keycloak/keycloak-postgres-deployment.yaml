@@ -31,6 +31,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.keycloak.secret.name }}
                   key: {{ .Values.keycloak.secret.postgres.passwordKey }}
+            {{- include "eclipse-shared.customEnvs" .Values.keycloak.postgres.customEnvs | indent 12 }}
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
