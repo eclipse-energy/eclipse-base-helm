@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-core
+  {{- include "federator.core.labels" . | indent 2 }}
+spec:
+  replicas: {{ .Values.core.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-core
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-core
+    spec:
+      containers:
+        - name: core
+          image: {{ .Values.core.image.name }}:{{ .Values.core.image.version }}
+          ports:
+            - name: federator
+              containerPort: 8080
+          env:
+            - name: FEDERATOR_CA_KEY_PATH
+              value: file:/opt/federator-keys/federator-ca.key
+            - name: FEDERATOR_FIREBASE_SERVICE_ACCOUNT
+              value: file:/opt/federator-keys/firebase-service-account.json
+            - name: POSTGRES_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-postgres:5432/federator
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secret.name }}
+                  key: {{ .Values.postgres.secret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secret.name }}
+                  key: {{ .Values.postgres.secret.passwordKey }}
+          volumeMounts:
+            - name: federator-keys
+              mountPath: /opt/federator-keys
+              readOnly: true
+      volumes:
+        - name: federator-keys
+          secret:
+            secretName: {{ .Values.core.keysSecret.name }}
+
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
