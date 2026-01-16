@@ -1,0 +1,30 @@
+{{- if eq .Values.ingress.enabled true }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  annotations:
+    {{- if eq .Values.ingress.tls.enabled true }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.clusterIssuer }}
+    {{- end }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: {{ default "/" .Values.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-core
+                port:
+                  name: federator
+
+  {{- if eq .Values.ingress.tls.enabled true }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+  {{- end }}
+
+{{- end }}

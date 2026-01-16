@@ -1,0 +1,31 @@
+imagePullSecret:
+  name: ghcr-secret
+
+core:
+  image:
+    name: ghcr.io/eclipse-energy/federator
+    version: latest
+  replicaCount: 1
+  keysSecret:
+    name: federator-keys-secret
+
+ingress:
+  enabled: false
+  host:
+  path: federator
+  tls:
+    enabled: false
+    clusterIssuer:
+    secretName:
+
+postgres:
+  replicaCount: 1
+  secret:
+    name: postgres-secret
+    usernameKey: username
+    passwordKey: password
+  image:
+    name: postgres
+    version: 17.6
+  storageSize: 5Gi
+  customEnvs:
