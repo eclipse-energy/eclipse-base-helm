@@ -20,6 +20,7 @@ spec:
             - name: federator
               containerPort: 8080
           env:
+            {{- include "federator.core.envs.context-path" . | indent 12 }}
             - name: FEDERATOR_CA_KEY_PATH
               value: file:/opt/federator-keys/federator-ca.key
             - name: FEDERATOR_FIREBASE_SERVICE_ACCOUNT
@@ -36,6 +37,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.postgres.secret.name }}
                   key: {{ .Values.postgres.secret.passwordKey }}
+            - name: KEYCLOAK_ISSUER_URI
+              value: https://{{ .Values.core.keycloak.uri }}/realms/{{ .Values.core.keycloak.realm }}
+            - name: KEYCLOAK_JWK_URI
+              value: https://{{ .Values.core.keycloak.uri }}/realms/{{ .Values.core.keycloak.realm }}/protocol/openid-connect/certs
+            {{- include "federator.customEnvs" .Values.core.customEnvs | indent 12 }}
           volumeMounts:
             - name: federator-keys
               mountPath: /opt/federator-keys

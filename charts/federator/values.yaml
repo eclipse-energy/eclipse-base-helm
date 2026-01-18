@@ -8,11 +8,14 @@ core:
   replicaCount: 1
   keysSecret:
     name: federator-keys-secret
+  keycloak:
+    uri:
+    realm:
 
 ingress:
   enabled: false
   host:
-  path: federator
+  path: /federator
   tls:
     enabled: false
     clusterIssuer:
