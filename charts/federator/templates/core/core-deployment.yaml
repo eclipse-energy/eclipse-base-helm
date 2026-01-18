@@ -25,6 +25,8 @@ spec:
               value: file:/opt/federator-keys/federator-ca.key
             - name: FEDERATOR_FIREBASE_SERVICE_ACCOUNT
               value: file:/opt/federator-keys/firebase-service-account.json
+            - name: FEDERATOR_PORT
+              value: "8080"
             - name: POSTGRES_URL
               value: jdbc:postgresql://{{ .Release.Name }}-postgres:5432/federator
             - name: POSTGRES_USER

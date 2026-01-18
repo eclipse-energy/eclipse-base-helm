@@ -4,7 +4,7 @@ Custom Environments
 {{- define "federator.customEnvs" -}}
 {{- range . }}
 - name: {{ .name }}
-  value: {{ .value }}
+  value: {{ .value | quote }}
 {{- end }}
 {{- end }}
 
