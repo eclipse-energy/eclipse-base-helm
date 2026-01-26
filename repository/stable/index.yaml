@@ -3,14 +3,25 @@ entries:
   eclipse-aiida:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-01-18T18:32:56.577395327+01:00"
+    created: "2026-01-26T10:31:42.211284458+01:00"
     description: Helm Chart of ECLIPSE AIIDA
-    digest: b4c16eb03d78b312ec2919187d4c67972e8ab548546a47df364a5fc84c5e4842
+    digest: c552052f3c9aba282bf3fd918bc6d23a3ab058de8e9440648ee490f56edd2e32
     name: eclipse-aiida
     type: application
     urls:
     - https://eclipse-energy.github.io/eclipse-base-helm/stable/packages/eclipse-aiida-0.0.1.tgz
     version: 0.0.1
+  eclipse-aiida-installer:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2026-01-26T10:31:42.21158563+01:00"
+    description: Helm chart of the AIIDA installer
+    digest: dbdecad4ed816fbf92174fd94ee8c5fbcc68a2aa0fd79a22961520f924dcebf4
+    name: eclipse-aiida-installer
+    type: application
+    urls:
+    - https://eclipse-energy.github.io/eclipse-base-helm/stable/packages/eclipse-aiida-installer-0.1.0.tgz
+    version: 0.1.0
   eclipse-backend:
   - apiVersion: v2
     appVersion: 1.0.1
