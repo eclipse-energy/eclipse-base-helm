@@ -19,21 +19,21 @@ secrets:
     encryptedInstallerToken: "*"
 
   timescaledb:
-    encryptedUsername: "*?" # Only change during initial installation!
-    encryptedPassword: "*?" # Only change during initial installation!
+    encryptedUsername: "*?"
+    encryptedPassword: "*?"
 
   internal:
-    encryptedDbUsername: "*?" # Only change during initial installation!
-    encryptedDbPassword: "*?" # Only change during initial installation!
-    encryptedMqttUsername: "*"
-    encryptedMqttPassword: "*"
-    encryptedDashboardUsername: "*"
-    encryptedDashboardPassword: "*"
+    encryptedDbUsername: "*?"
+    encryptedDbPassword: "*?"
+    encryptedMqttUsername: "*?"
+    encryptedMqttPassword: "*?"
+    encryptedDashboardUsername: "*?"
+    encryptedDashboardPassword: "*?"
 
   external:
-    encryptedDbUsername: "*?" # Only change during initial installation!
-    encryptedDbPassword: "*?" # Only change during initial installation!
-    encryptedMqttUsername: "*"
-    encryptedMqttPassword: "*"
-    encryptedDashboardUsername: "*"
-    encryptedDashboardPassword: "*"
+    encryptedDbUsername: "*?"
+    encryptedDbPassword: "*?"
+    encryptedMqttUsername: "*?"
+    encryptedMqttPassword: "*?"
+    encryptedDashboardUsername: "*?"
+    encryptedDashboardPassword: "*?"
