@@ -16,6 +16,9 @@ core:
   marketplace:
     federatorUrl: "https://marketplace.eclipse-aiida.org/federator"
   encryptedInstallerToken: ""
+  loggingLevel:
+    root:
+    aiida:
 
 timescaledb:
   enabled: true

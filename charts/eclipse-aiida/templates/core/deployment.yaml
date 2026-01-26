@@ -101,6 +101,15 @@ spec:
                   name: {{ .Release.Name }}-external-secret
                   key: mqttPassword
 
+            {{- if .Values.core.loggingLevel.root }}
+            - name: LOGGING_LEVEL_ROOT
+              value: {{ .Values.core.loggingLevel.root }}
+            {{- end }}
+            {{- if .Values.core.loggingLevel.aiida }}
+            - name: LOGGING_LEVEL_ENERGY_EDDIE_AIIDA_CORE
+              value: {{ .Values.core.loggingLevel.aiida }}
+            {{- end }}
+
             {{- if and (eq .Values.ingress.enabled true) .Values.core.path }}
             - name: SERVER_SERVLET_CONTEXT_PATH
               value: {{ .Values.core.path }}
