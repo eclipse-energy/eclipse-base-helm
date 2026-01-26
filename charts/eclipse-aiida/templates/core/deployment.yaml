@@ -60,7 +60,7 @@ spec:
             - name: AIIDA_MESSAGE_BUS_INTERNAL_MQTT_HOST
               value: {{ .Release.Name }}-internal
             - name: AIIDA_MESSAGE_BUS_INTERNAL_MQTT_PORT
-              value: "1883"
+              value: {{ .Values.internal.ports.mqtt | quote }}
             - name: AIIDA_MESSAGE_BUS_INTERNAL_MQTT_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -89,7 +89,7 @@ spec:
             - name: AIIDA_MESSAGE_BUS_EXTERNAL_MQTT_HOST
               value: {{ .Release.Name }}-external
             - name: AIIDA_MESSAGE_BUS_EXTERNAL_MQTT_PORT
-              value: "1883"
+              value: {{ .Values.external.ports.mqtt | quote }}
             - name: AIIDA_MESSAGE_BUS_EXTERNAL_MQTT_USERNAME
               valueFrom:
                 secretKeyRef:
