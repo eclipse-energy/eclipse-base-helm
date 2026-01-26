@@ -29,7 +29,7 @@ spec:
               containerPort: 18083
           env:
             - name: AUTH_SERVER
-              value: timescaledb:5432
+              value: {{ .Release.Name }}-timescaledb:5432
             - name: AUTH_DATABASE
               value: {{ .Values.internal.database }}
             - name: AUTH_SCHEMA
@@ -55,19 +55,19 @@ spec:
                   name: {{ .Release.Name }}-internal-secret
                   key: dashboardPassword
           volumeMounts:
-            - name: emqx-data
-              mountPath: /opt/emqx/data
             - name: emqx-config
               mountPath: /tmp/base.hocon
               subPath: base.hocon
             - name: emqx-config
               mountPath: /tmp/substitute-env.sh
               subPath: substitute-env.sh
+
+          readinessProbe:
+            tcpSocket:
+              port: dashboard
+
       volumes:
         - name: emqx-config
           configMap:
             name: {{ .Release.Name }}-emqx-configmap
-        - name: emqx-data
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-internal-pvc
 {{- end }}

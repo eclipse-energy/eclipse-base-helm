@@ -16,6 +16,9 @@ core:
   marketplace:
     federatorUrl: "https://marketplace.eclipse-aiida.org/federator"
   encryptedInstallerToken: ""
+  loggingLevel:
+    root:
+    aiida:
 
 timescaledb:
   enabled: true
@@ -35,6 +38,10 @@ internal:
   image:
     name: emqx/emqx
     version: 5.8.6
+  ports:
+    mqtt: 1883
+    mqttTls: 8883
+    dashboard: 18083
   database: emqx_internal_db
   databaseSchema: internal
   encryptedDbUsername: ""
@@ -51,6 +58,10 @@ external:
   image:
     name: emqx/emqx
     version: 5.8.6
+  ports:
+    mqtt: 1884
+    mqttTls: 8884
+    dashboard: 18084
   database: emqx_external_db
   databaseSchema: external
   encryptedDbUsername: ""

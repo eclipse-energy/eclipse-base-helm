@@ -6,14 +6,15 @@ metadata:
 spec:
   selector:
     app: {{ .Release.Name }}-internal
+  type: LoadBalancer
   ports:
     - name: mqtt
-      port: 1883
+      port: {{ .Values.internal.ports.mqtt }}
       targetPort: mqtt
     - name: mqtt-tls
-      port: 8883
+      port: {{ .Values.internal.ports.mqttTls }}
       targetPort: mqtt-tls
     - name: dashboard
-      port: 18083
+      port: {{ .Values.internal.ports.dashboard }}
       targetPort: dashboard
 {{- end }}
