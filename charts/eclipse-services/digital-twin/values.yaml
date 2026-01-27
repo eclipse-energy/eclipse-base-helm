@@ -1,0 +1,25 @@
+ghcrImagePullSecrets:
+  name: ghcr-secret
+
+core:
+  enabled: true
+  replicaCount: 1
+  image:
+    name: ghcr.io/eclipse-energy/eclipse-services-digital-twin
+    version: latest
+  loggingLevel:
+    root:
+    digitalTwin:
+
+timescaledb:
+  enabled: true
+  replicaCount: 1
+  storageSize: 1Gi
+  image:
+    name: timescale/timescaledb
+    version: 2.21.1-pg17
+  service:
+    type: ClusterIP
+  database: digital-twin
+  username: "REPLACE_ME"
+  password: "REPLACE_ME"
