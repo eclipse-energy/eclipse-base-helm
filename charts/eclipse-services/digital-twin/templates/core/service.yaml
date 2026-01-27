@@ -1,0 +1,13 @@
+{{- if eq .Values.core.enabled true }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-core
+spec:
+  selector:
+    app: {{ .Release.Name }}-core
+  ports:
+    - name: core
+      targetPort: core
+      port: 8080
+{{- end }}

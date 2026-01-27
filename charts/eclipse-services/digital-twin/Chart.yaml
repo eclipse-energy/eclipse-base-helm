@@ -1,0 +1,7 @@
+apiVersion: v2
+name: digital-twin
+description: Helm Chart of Eclipse Digital Twin Service
+
+type: application
+version: 0.0.1
+appVersion: "0.0.1"

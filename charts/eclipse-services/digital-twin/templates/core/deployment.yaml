@@ -1,0 +1,49 @@
+{{- if eq .Values.core.enabled true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-core
+spec:
+  replicas: {{ .Values.core.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-core
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-core
+      annotations:
+        checksum/timescaledbSecret: {{ include (print $.Template.BasePath "/timescaledb/secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: core
+          image: {{ .Values.core.image.name }}:{{ .Values.core.image.version }}
+          ports:
+            - name: core
+              containerPort: 8080
+          env:
+            - name: DIGITAL_TWIN_DB_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-timescaledb:5432/{{ .Values.timescaledb.database }}
+            - name: DIGITAL_TWIN_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-timescaledb-secret
+                  key: username
+            - name: DIGITAL_TWIN_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-timescaledb-secret
+                  key: password
+
+            {{- if .Values.core.loggingLevel.root }}
+            - name: LOGGING_LEVEL_ROOT
+              value: {{ .Values.core.loggingLevel.root }}
+            {{- end }}
+            {{- if .Values.core.loggingLevel.digitalTwin }}
+            - name: LOGGING_LEVEL_ENERGY_ECLIPSE_SERVICES_DIGITALTWIN
+              value: {{ .Values.core.loggingLevel.digitalTwin }}
+            {{- end }}
+
+      imagePullSecrets:
+        - name: {{ .Values.ghcrImagePullSecrets.name }}
+{{- end }}
