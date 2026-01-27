@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     app: {{ .Release.Name }}-timescaledb
+  type: {{ .Values.timescaledb.service.type }}
   ports:
     - port: 5432
 {{- end }}

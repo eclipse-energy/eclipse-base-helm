@@ -27,6 +27,8 @@ timescaledb:
   image:
     name: timescale/timescaledb
     version: 2.21.1-pg17
+  service:
+    type: ClusterIP
   database: aiida-core
   encryptedUsername: ""
   encryptedPassword: ""
