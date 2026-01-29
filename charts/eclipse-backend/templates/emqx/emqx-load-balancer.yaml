@@ -1,0 +1,18 @@
+{{- if eq .Values.emqx.enabled true }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-emqx-load-balancer
+  {{- include "eclipse-backend.emqx.labels" . | indent 2 }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-emqx
+  type: LoadBalancer
+  ports:
+    - name: emqx-load-balancer-tls
+      port: {{ .Values.emqx.externalPortTLS }}
+      targetPort: 8883
+    - name: emqx-load-balancer-mtls
+      port: {{ .Values.emqx.externalPortMTLS }}
+      targetPort: 8884
+{{- end }}

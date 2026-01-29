@@ -66,6 +66,8 @@ emqx:
   enabled: true
   replicaCount: 1
   storageSize: 3Gi
+  externalPortTLS: 8883
+  externalPortMTLS: 8884
   secret:
     name: emqx-secret
     mqttPasswordKey: mqttPassword

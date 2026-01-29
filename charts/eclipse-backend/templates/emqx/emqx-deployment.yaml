@@ -23,6 +23,8 @@ spec:
               containerPort: 1883
             - name: mqtt-tls
               containerPort: 8883
+            - name: mqtt-mtls
+              containerPort: 8884
             - name: dashboard
               containerPort: 18083
           env:
