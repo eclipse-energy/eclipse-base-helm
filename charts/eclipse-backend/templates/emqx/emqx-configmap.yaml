@@ -6,14 +6,59 @@ metadata:
   {{- include "eclipse-backend.emqx.labels" . | indent 2 }}
 data:
   base.hocon: |
+    zones {
+        internal {}
+        aiida {}
+        user {}
+    }
+
+    listeners {
+      tcp {
+        default {
+          enable = true
+          zone = "internal"
+        }
+      }
+      ssl {
+        default {
+          enable = true
+          zone = "user"
+          ssl_options {
+            fail_if_no_peer_cert = false
+            verify = verify_none
+          }
+        }
+        aiida {
+          enable = true
+          zone = "aiida"
+          bind = "8884"
+          ssl_options {
+            fail_if_no_peer_cert = true
+            verify = verify_peer
+          }
+        }
+      }
+      ws {
+        default {
+          enable = false
+        }
+      }
+      wss {
+        default {
+          enable = false
+        }
+      }
+    }
+
     authentication = [
       {
-        disconnect_after_expire = true
         enable = true
+        mechanism = jwt
+        precondition = "str_eq(zone, 'user')"
+        disconnect_after_expire = true
         endpoint = "REPLACED_WITH_ENV"
         from = password
         headers {Accept = "application/json"}
-        mechanism = jwt
         refresh_interval = 300
         ssl {
           enable = false
@@ -24,8 +69,18 @@ data:
         }
       },
       {
-        backend = built_in_database
+        enable = true
+        mechanism = cinfo
+        precondition = "str_eq(zone, 'aiida')"
+        checks = [
+          {is_match = "str_eq(cert_common_name, username)", result = allow}
+        ]
+      },
+      {
+        enable = true
         mechanism = password_based
+        precondition = "str_eq(zone, 'internal')"
+        backend = built_in_database
         password_hash_algorithm {
           name = bcrypt
           salt_rounds = "10"
@@ -37,8 +92,29 @@ data:
       }
     ]
 
+    authorization {
+      sources = [
+        {
+          type = postgresql
+          enable = true
+          server = REPLACED_WITH_ENV
+          database = REPLACED_WITH_ENV
+          username = emqx
+          password = REPLACED_WITH_ENV
+          query = """~
+            SELECT LOWER(action) AS action, LOWER(permission) AS permission, topic
+             FROM public.mqtt_acl_entry
+             WHERE username = ${username} AND listener_type = UPPER(${zone});~"""
+        },
+        {
+          type = file
+          enable = true
+          path = "${EMQX_ETC_DIR}/acl.conf"
+        }
+      ]
+    }
+
   acl.conf: |
-    {allow, all, subscribe, ["$users/{username}/#"]}.
     {allow, {user, "eclipse"}, publish, ["#"]}.
 
     {deny, all}.
@@ -51,7 +127,6 @@ data:
         "is_superuser": true
       }
     ]
-
 
   replace-password-with-env.sh: |
     #!/bin/sh
@@ -69,5 +144,53 @@ data:
     sed "s|${PART_TO_REPLACE}|${ECLIPSE_MQTT_PASSWORD}|g" "${INIT_USER_FILE}" > "${BOOTSTRAP_FILE}"
 
     exec /usr/bin/docker-entrypoint.sh emqx foreground
+
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDDzCCAfegAwIBAgIUZIqGqaM0vz70FW+uoqpAEEfeTiswDQYJKoZIhvcNAQEL
+    BQAwFzEVMBMGA1UEAwwMRmVkZXJhdG9yIENBMB4XDTI1MDMxMTA3MDA1MVoXDTM1
+    MDMwOTA3MDA1MVowFzEVMBMGA1UEAwwMRmVkZXJhdG9yIENBMIIBIjANBgkqhkiG
+    9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmmWZtBPMioDAjNyJ0XGDHCNlcov5hYrnh5nt
+    gS8V2p94ou5iX0XL6SaareGfE6gChl156lCkR12xabT+RKIw53Nn2mJA1O3KOl0C
+    Dyqzu2XIZKj7qqRtdxnyrCKTw28G/CVSX32m+txp6luL/qsQbHB29Sdlcq8078ei
+    WHEcyvludnsj7kt5gtSRqgERncnBUQgU3GVSZWUCpAfoClJPk27uN3nwnxeDn/LC
+    mdjYBfPwrqfVL9FQju2K4Eq3+EI35QYz8qMrN5lzzEobRLWiQ3mH94EBIdaHNpsk
+    7JJvHFf4QT0el05E5/NHYbV4VDw4gvWjnh9XcdbXo4jqyndi8QIDAQABo1MwUTAd
+    BgNVHQ4EFgQUUs0Ndh0g/g/T7xpnXLirC/SoaBIwHwYDVR0jBBgwFoAUUs0Ndh0g
+    /g/T7xpnXLirC/SoaBIwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC
+    AQEAGsEHgSDhKqvUbUNOuy2PD02ReYWXVMvZkT1jQk2NoI1XdF9wpxOjFJz7Qtag
+    +F58HYzDhfQO7IaABlCEBIUgMT/7obHgZCN6TH86nAdVcLONSMc36Epoyfg4l1an
+    KkjdQKHTlG5YeMWloOBs1T0ED8cBZr6abtDkZLegCDyuJmf6UbKPtOcr/dqzzCq2
+    flOkKAU4zYdhN/Rwv7aBOMtoWssugtpiKgfO9pk9NvCa0Iw5xpbl6IwGDhZTvyy2
+    cbkQcYSj8m/tfDQtQtAV46037h+H4OalmbkP0QMHLssOEQxtwndODyvBb9sL2o4A
+    qzJ1pXmnXdE9xoRtkAe2U9UP6A==
+    -----END CERTIFICATE-----
+
+
+  server.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIID8jCCAtqgAwIBAgIUcbxttiVrjoA/SQsSBNTV3Ic51OgwDQYJKoZIhvcNAQEL
+    BQAwFzEVMBMGA1UEAwwMRmVkZXJhdG9yIENBMB4XDTI2MDExMzA4MzgyNFoXDTM2
+    MDExMTA4MzgyNFowggEJMQswCQYDVQQGEwJBVDEWMBQGA1UECAwNVXBwZXIgQXVz
+    dHJpYTEiMCAGA1UEBwwZSGFnZW5iZXJnIGltIE3Dg8K8aGxrcmVpczE1MDMGA1UE
+    CgwsVW5pdmVyc2l0eSBvZiBBcHBsaWVkIFNjaWVuY2VzIFVwcGVyIEF1c3RyaWEx
+    ITAfBgNVBAsMGFJlc2VhcmNoIGFuZCBEZXZlbG9wbWVudDEtMCsGA1UEAwwkZWNs
+    aXBzZS1kZXYucHJvamVrdGUuZmgtaGFnZW5iZXJnLmF0MTUwMwYJKoZIhvcNAQkB
+    FiZzYWlsLmVuZXJneS5kZXZlbG9wZXJzQGZoLWhhZ2VuYmVyZy5hdDCCASIwDQYJ
+    KoZIhvcNAQEBBQADggEPADCCAQoCggEBALViMigEFQoCsecIphoBXxRSFQSXZxBr
+    PS9mA+tTLBA01JcoZRorIXSTHnMsqIO07mgY9BN/jt25ljPcasjkaZT2HVSbWmP7
+    Ky6RnivzdZQdR9lD+3Bl5HrxQS+l1EvaIY66nkrjZzDwPsNLfjf7werMd/OnTyM+
+    8K/nirXF7YJsdCz7rk0LeE1cK6zSNCTXZU6TFyltbX8cVJZXAYm3zJg8JVLz1LY0
+    7PAr4xxF2tgKJcTaK0rMF7bRVlMNfagBqJqax+abQcyK9zPm8J7fTgRzKE8KZ0Ve
+    d27mt/O3S8dtgHoCZU6fTpGe/7GNbXXYcPM4LSHDo2OVpjhjGMhh4PECAwEAAaNC
+    MEAwHQYDVR0OBBYEFKU76o2QPik2zON/J3JFputdjpiaMB8GA1UdIwQYMBaAFFLN
+    DXYdIP4P0+8aZ1y4qwv0qGgSMA0GCSqGSIb3DQEBCwUAA4IBAQB/zxAob4YaktGr
+    R5u1ozIHhB4Tr/7jc24drDfw/sFESVeroTe5TMc3UJ+zBqMa+uJD/zxAeFY16pKV
+    5jTg0HiI5K+GuQkfgT1lemFJDMSsSkJxkh9o1Ifq+fqQi5EaO1tA+zx0bQNp5p2Z
+    9ZN6c2t/vYOtaYkUmQp3DpV+J0+N6KwkrvcOOrk74hCMjA6D8mDmRax4Wz9x0psj
+    5UM5VkxhR+fGPVYe7t1i6xYywHjBeOiPUXiwvDJBxiLsEZnOVtVUCtOUNK5rlt23
+    ivjSD2yjrpjef1TVnAWjKTOWV3lN0DspXs8Xl3zVLtJJBlW0qQ79l6BA4awglBM4
+    5CNaALFy
+    -----END CERTIFICATE-----
 
 {{- end }}

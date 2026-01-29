@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: emqx
-          args: ["bin/sh", "/tmp/replace-password-with-env.sh"]
+          args: ["/bin/sh", "/tmp/replace-password-with-env.sh"]
           image: {{ .Values.emqx.image.name }}:{{ .Values.emqx.image.version }}
           ports:
             - name: mqtt
@@ -28,11 +28,20 @@ spec:
           env:
             - name: EMQX_AUTHENTICATION__1__ENDPOINT
               value: {{ .Values.keycloak.internalHost }}/realms/{{ .Values.keycloak.realm }}/protocol/openid-connect/certs
+            - name: EMQX_AUTHORIZATION__SOURCES__1__DATABASE
+              value: eclipse-backend
+            - name: EMQX_AUTHORIZATION__SOURCES__1__SERVER
+              value: {{ .Release.Name }}-timescaledb:5432
+            - name: EMQX_AUTHORIZATION__SOURCES__1__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.emqx.secret.name }}
+                  key: {{ .Values.emqx.secret.dbPasswordKey }}
             - name: ECLIPSE_MQTT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.emqx.secret.name }}
-                  key: {{ .Values.emqx.secret.passwordKey }}
+                  key: {{ .Values.emqx.secret.mqttPasswordKey }}
             {{- include "eclipse-backend.customEnvs" .Values.emqx.customEnvs | indent 12 }}
           volumeMounts:
             - name: backend-emqx-data
@@ -49,10 +58,22 @@ spec:
             - name: backend-emqx-config
               mountPath: /tmp/replace-password-with-env.sh
               subPath: replace-password-with-env.sh
+            - name: backend-emqx-config
+              subPath: server.crt
+              mountPath: /opt/emqx/etc/certs/cert.pem
+            - name: backend-emqx-config
+              subPath: ca.crt
+              mountPath: /opt/emqx/etc/certs/cacert.pem
+            - name: {{ .Values.emqx.secret.name }}
+              subPath: {{ .Values.emqx.secret.sslKeyKey }}
+              mountPath: /opt/emqx/etc/certs/key.pem
       volumes:
         - name: backend-emqx-config
           configMap:
             name: {{ .Release.Name }}-emqx-configmap
+        - name: {{ .Values.emqx.secret.name }}
+          secret:
+            secretName: {{ .Values.emqx.secret.name }}
         - name: backend-emqx-data
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-emqx-pvc

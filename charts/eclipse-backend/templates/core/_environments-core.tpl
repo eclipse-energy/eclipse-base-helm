@@ -123,13 +123,15 @@ Keycloak Environments
 MQTT Environments
 */}}
 {{- define "eclipse-backend.core.envs.mqtt" }}
-{{- if ge (int .Values.emqx.replicaCount) 1 }}
+{{- if eq .Values.emqx.enabled true }}
 - name: ECLIPSE_MQTT_SERVER_URI
-  value: tcp://{{ .Release.Name }}-emqx:1883
+  value: "tcp://{{ .Release.Name }}-emqx:1883"
+- name: ECLIPSE_MQTT_USERNAME
+  value: "eclipse"
 - name: ECLIPSE_MQTT_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ .Values.emqx.secret.name }}
-      key: {{ .Values.emqx.secret.passwordKey }}
+      key: {{ .Values.emqx.secret.mqttPasswordKey }}
 {{- end }}
 {{- end }}

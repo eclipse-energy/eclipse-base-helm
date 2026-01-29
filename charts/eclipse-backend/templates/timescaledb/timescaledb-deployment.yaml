@@ -32,11 +32,27 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.timescaledb.secret.name }}
                   key: {{ .Values.timescaledb.secret.passwordKey }}
+            {{- if eq .Values.emqx.enabled true }}
+            - name: ECLIPSE_MQTT_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.emqx.secret.name }}
+                  key: {{ .Values.emqx.secret.dbPasswordKey }}
+            {{- end }}
             {{- include "eclipse-backend.customEnvs" .Values.timescaledb.customEnvs | indent 12 }}
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
+            - name: postgres-config
+              subPath: init.sql
+              mountPath: /tmp/init.sql
+            - name: postgres-config
+              subPath: replace-password-with-env.sh
+              mountPath: /docker-entrypoint-initdb.d/00-replace_password_with_env.sh
       volumes:
+        - name: postgres-config
+          configMap:
+            name: {{ .Release.Name }}-timescaledb-configmap
         - name: postgres-data
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-timescaledb-pvc
