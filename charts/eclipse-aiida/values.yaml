@@ -13,8 +13,10 @@ core:
     name: ghcr.io/eclipse-energy/eclipse-aiida
     version: latest
   path:
-  marketplace:
-    federatorUrl: "https://marketplace.eclipse-aiida.org/federator"
+  installer:
+    url: "http://aiida-installer:8010"
+  federator:
+    url: "https://eclipse-dev.projekte.fh-hagenberg.at/federator"
   encryptedInstallerToken: ""
   loggingLevel:
     root:
