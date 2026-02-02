@@ -1,3 +1,4 @@
+{{- if eq .Values.keycloak.enabled true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -58,4 +59,4 @@ spec:
                 path: login/resources/css/styles.css
               - key: eclipse.svg
                 path: login/resources/images/eclipse.svg
-
+{{- end }}

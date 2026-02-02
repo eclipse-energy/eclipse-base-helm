@@ -1,4 +1,5 @@
-{{- if eq .Values.ingress.enabled true }}
+{{- if eq .Values.keycloak.enabled true }}
+{{- if eq .Values.keycloak.ingress.enabled true }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -27,4 +28,5 @@ spec:
         - {{ .Values.ingress.host }}
       secretName: {{ .Values.ingress.tls.secretName }}
   {{- end }}
+{{- end }}
 {{- end }}

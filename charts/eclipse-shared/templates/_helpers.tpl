@@ -9,7 +9,16 @@ Custom Environments
 {{- end }}
 
 {{/*
-Metadata for eclipse-backend core components.
+Metadata for jaeger components
+*/}}
+{{- define "eclipse-shared.jaeger.labels" }}
+labels:
+  app: {{ .Release.Name }}-keycloak
+{{- include "eclipse-shared.labels" . }}
+{{- end }}
+
+{{/*
+Metadata for keycloak components
 */}}
 {{- define "eclipse-shared.keycloak.labels" }}
 labels:
@@ -18,7 +27,7 @@ labels:
 {{- end }}
 
 {{/*
-Metadata for eclipse-backend components.
+Metadata for shared components.
 */}}
 {{- define "eclipse-shared.labels" }}
   generator: helm

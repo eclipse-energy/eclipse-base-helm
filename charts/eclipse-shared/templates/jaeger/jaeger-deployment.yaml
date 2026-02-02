@@ -1,0 +1,32 @@
+{{- if eq .Values.jaeger.enabled true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-jaeger
+  {{- include "eclipse-shared.jaeger.labels" . | indent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-jaeger
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-jaeger
+    spec:
+      containers:
+        - name: jaeger
+          image: {{ .Values.jaeger.image.name }}:{{ .Values.jaeger.image.version }}
+          ports:
+            - name: ui
+              containerPort: 16686
+            - name: otlp-receiver
+              containerPort: 4317
+          env:
+            - name: COLLECTOR_OTLP_ENABLED
+              value: "true"
+            {{- if eq .Values.jaeger.ingress.enabled true }}
+            - name: QUERY_BASE_PATH
+              value: {{ .Values.jaeger.ingress.path }}
+            {{- end }}
+{{- end }}

@@ -1,4 +1,5 @@
 keycloak:
+  enabled: true
   image:
     name: quay.io/keycloak/keycloak
     version: 26.2
@@ -17,14 +18,27 @@ keycloak:
     customEnvs:
 
   ingress:
+    enabled: true
     path: /iam
 
   customEnvs:
 
+jaeger:
+  enabled: true
+  image:
+    name: jaegertracing/all-in-one
+    version: 1.69.0
+
+  ingress:
+    basicAuth:
+      enabled: false
+      secret:
+        name: jaeger-auth
+    enabled: false
+    path: /jaeger
+
 ingress:
-  enabled: false
   host:
-  path:
   tls:
     enabled: false
     clusterIssuer:
