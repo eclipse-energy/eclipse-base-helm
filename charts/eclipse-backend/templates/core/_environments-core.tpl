@@ -19,6 +19,14 @@ Tracing
 {{- end }}
 
 {{/*
+Google
+*/}}
+{{- define "eclipse-backend.core.envs.google" }}
+- name: ECLIPSE_GOOGLE_SERVICE_ACCOUNT_LOCATION
+  value: /opt/google/google-services.json
+{{- end }}
+
+{{/*
 Context Path
 */}}
 {{- define "eclipse-backend.core.envs.context-path" -}}

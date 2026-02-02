@@ -31,16 +31,24 @@ spec:
             {{- include "eclipse-backend.core.envs.keycloak" . | indent 12 }}
             {{- include "eclipse-backend.core.envs.mqtt" . | indent 12 }}
             {{- include "eclipse-backend.core.envs.tracing" . | indent 12 }}
+            {{- include "eclipse-backend.core.envs.google" . | indent 12 }}
             {{- include "eclipse-backend.customEnvs" .Values.core.customEnvs | indent 12 }}
           volumeMounts:
             - name: backend-truststore
               subPath: client.truststore.jks
               mountPath: /etc/certs/kafka/client.truststore.jks
               readOnly: true
+            - name: google-service-account
+              subPath: {{ .Values.core.google.secret.serviceAccountKey }}
+              mountPath: /opt/google/google-services.json
+              readOnly: true
       volumes:
         - name: backend-truststore
           secret:
             secretName: {{ .Values.core.kafka.sslTrustStoreSecret.name }}
+        - name: google-service-account
+          secret:
+            secretName: {{ .Values.core.google.secret.name }}
 
       imagePullSecrets:
         - name: {{ .Values.imagePullSecret.name }}

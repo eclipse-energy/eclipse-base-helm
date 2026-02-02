@@ -47,6 +47,10 @@ core:
   image:
     name: ghcr.io/eclipse-energy/eclipse-backend
     version: latest
+  google:
+    secret:
+      name: google-secret
+      serviceAccountKey: google-services.json
   customEnvs:
 
 timescaledb:
