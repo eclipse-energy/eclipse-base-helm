@@ -133,5 +133,10 @@ MQTT Environments
     secretKeyRef:
       name: {{ .Values.emqx.secret.name }}
       key: {{ .Values.emqx.secret.mqttPasswordKey }}
+- name: ECLIPSE_MQTT_DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.emqx.secret.name }}
+      key: {{ .Values.emqx.secret.dbPasswordKey }}
 {{- end }}
 {{- end }}

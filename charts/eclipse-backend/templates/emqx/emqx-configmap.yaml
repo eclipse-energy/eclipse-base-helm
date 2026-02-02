@@ -99,7 +99,7 @@ data:
           enable = true
           server = REPLACED_WITH_ENV
           database = REPLACED_WITH_ENV
-          username = emqx
+          username = eclipse_mqtt_db_user
           password = REPLACED_WITH_ENV
           query = """~
             SELECT LOWER(action) AS action, LOWER(permission) AS permission, topic
@@ -112,6 +112,11 @@ data:
           path = "${EMQX_ETC_DIR}/acl.conf"
         }
       ]
+    }
+
+    dashboard {
+      default_username = "REPLACED_WITH_ENV"
+      default_password = "REPLACED_WITH_ENV"
     }
 
   acl.conf: |

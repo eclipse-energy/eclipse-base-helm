@@ -34,6 +34,16 @@ spec:
               value: eclipse-backend
             - name: EMQX_AUTHORIZATION__SOURCES__1__SERVER
               value: {{ .Release.Name }}-timescaledb:5432
+            - name: EMQX_DASHBOARD__DEFAULT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.emqx.secret.name }}
+                  key: {{ .Values.emqx.secret.dashboardUsernameKey }}
+            - name: EMQX_DASHBOARD__DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.emqx.secret.name }}
+                  key: {{ .Values.emqx.secret.dashboardPasswordKey }}
             - name: EMQX_AUTHORIZATION__SOURCES__1__PASSWORD
               valueFrom:
                 secretKeyRef:
