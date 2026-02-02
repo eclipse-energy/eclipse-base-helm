@@ -118,6 +118,15 @@ spec:
               value: {{ .Values.core.path }}
             {{- end }}
 
+          volumeMounts:
+            - name: keystore-data
+              mountPath: /keystore
+
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
+
+      volumes:
+        - name: keystore-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-keystore-pvc
 {{- end }}

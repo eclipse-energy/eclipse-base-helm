@@ -1,0 +1,12 @@
+{{- if eq .Values.core.enabled true }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-keystore-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.core.storageSize }}
+{{- end }}
