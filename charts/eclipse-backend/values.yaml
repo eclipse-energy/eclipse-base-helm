@@ -72,6 +72,8 @@ emqx:
     name: emqx-secret
     mqttPasswordKey: mqttPassword
     dbPasswordKey: dbPassword
+    dashboardUsernameKey: dashboardUsername
+    dashboardPasswordKey: dashboardPassword
     sslKeyKey: server.key
   image:
     name: emqx/emqx
