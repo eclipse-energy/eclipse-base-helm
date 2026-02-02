@@ -9,6 +9,7 @@ ingress:
 core:
   enabled: true
   replicaCount: 1
+  storageSize: 1Mi
   image:
     name: ghcr.io/eclipse-energy/eclipse-aiida
     version: latest
