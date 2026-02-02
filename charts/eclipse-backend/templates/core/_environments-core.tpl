@@ -44,7 +44,7 @@ DB Environments
 - name: ECLIPSE_DB_NAME
   value: eclipse-backend
 - name: ECLIPSE_DB_URL
-  value: jdbc:postgresql://{{ .Release.Name }}-timescaledb:5432/eclipse-backend
+  value: jdbc:postgresql://{{ .Release.Name }}-timescaledb-rw:5432/eclipse-backend
 - name: ECLIPSE_DB_USERNAME
   valueFrom:
     secretKeyRef:

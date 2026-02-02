@@ -1,0 +1,33 @@
+{{- if eq .Values.timescaledb.enabled true }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Release.Name }}-timescaledb
+  {{- include "eclipse-backend.timescaledb.labels" . | indent 2 }}
+spec:
+  instances: {{ .Values.timescaledb.replicaCount }}
+
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ImageCatalog
+    name: {{ .Release.Name }}-timescaledb
+    major: {{ .Values.timescaledb.image.majorVersion }}
+
+  postgresql:
+    shared_preload_libraries:
+      - timescaledb
+  postgresUID: 70
+  postgresGID: 70
+
+  bootstrap:
+    initdb:
+      database: eclipse-backend
+      owner: {{ .Values.timescaledb.username }}
+      secret:
+        name: {{ .Values.timescaledb.secret.name }}
+      postInitTemplateSQL:
+        - CREATE EXTENSION IF NOT EXISTS timescaledb;
+        - ALTER ROLE "{{ .Values.timescaledb.username }}" WITH CREATEROLE;
+  storage:
+    size: {{ .Values.timescaledb.storageSize }}
+{{- end }}

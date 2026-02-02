@@ -59,7 +59,9 @@ timescaledb:
   storageSize: 5Gi
   image:
     name: timescale/timescaledb
+    majorVersion: 17
     version: 2.21.1-pg17
+  username: eclipse_user
   secret:
     name: timescaledb-secret
     usernameKey: username
