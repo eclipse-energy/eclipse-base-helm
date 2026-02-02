@@ -23,7 +23,7 @@ Google
 */}}
 {{- define "eclipse-backend.core.envs.google" }}
 - name: ECLIPSE_GOOGLE_SERVICE_ACCOUNT_LOCATION
-  value: /opt/google/google-services.json
+  value: file:/opt/google/google-services.json
 {{- end }}
 
 {{/*
