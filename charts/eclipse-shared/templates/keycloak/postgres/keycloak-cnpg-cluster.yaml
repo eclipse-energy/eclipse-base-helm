@@ -1,3 +1,4 @@
+{{- if eq .Values.keycloak.enabled true }}
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -14,3 +15,10 @@ spec:
         name: {{ .Values.keycloak.postgres.secret.name }}
   storage:
     size: {{ .Values.keycloak.postgres.storageSize }}
+
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: {{ .Release.Name }}-keycloak-postgres-azure
+{{- end }}

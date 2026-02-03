@@ -1,3 +1,4 @@
 .idea
 charts/*/out
 charts/*/values-local.yaml
+charts/**/secrets-local.yaml

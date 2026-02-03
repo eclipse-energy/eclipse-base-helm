@@ -1,6 +1,9 @@
 imagePullSecret:
   name: ghcr-secret
 
+cluster:
+  name: dev
+
 keycloak:
   internalHost:
   externalHost:
@@ -20,10 +23,10 @@ core:
   replicaCount: 1
   corsAllowedOrigins:
   eddie:
-   id:
-   publicUrl:
-   vhdDataNeedId:
-   permissionMonitorSchedule: "0 0 18 * * *"
+    id:
+    publicUrl:
+    vhdDataNeedId:
+    permissionMonitorSchedule: "0 0 18 * * *"
   keycloak:
     clientId:
   kafka:
@@ -58,14 +61,21 @@ timescaledb:
   replicaCount: 1
   storageSize: 5Gi
   image:
-    name: timescale/timescaledb
-    majorVersion: 17
-    version: 2.21.1-pg17
+    name: ghcr.io/imusmanmalik/timescaledb-postgis
+    version: 17-3.5-98
   username: eclipse_user
   secret:
     name: timescaledb-secret
     usernameKey: username
     passwordKey: password
+  backup:
+    schedule: "0 0 0 * * *"
+    azure:
+      retentionPolicy: 7d
+      compression: gzip
+      secret:
+        name: azure-secret
+        connectionStringKey: connectionString
   customEnvs:
 
 emqx:
