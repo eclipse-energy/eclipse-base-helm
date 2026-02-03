@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Release.Name }}-postgres
+  {{- include "federator.postgres.labels" . | indent 2 }}
+spec:
+  instances: {{ .Values.postgres.replicaCount }}
+  imageName: {{ .Values.postgres.image.name }}:{{ .Values.postgres.image.version }}
+  bootstrap:
+    initdb:
+      database: federator
+      owner: {{ .Values.postgres.username }}
+      secret:
+        name: {{ .Values.postgres.secret.name }}
+  storage:
+    size: {{ .Values.postgres.storageSize }}
+
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: {{ .Release.Name }}-postgres

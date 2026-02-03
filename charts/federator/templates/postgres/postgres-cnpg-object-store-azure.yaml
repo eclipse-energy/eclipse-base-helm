@@ -1,0 +1,15 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-postgres
+  {{- include "federator.postgres.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.postgres.backup.azure.retentionPolicy }}
+  configuration:
+    destinationPath: azure://{{ .Values.cluster.name }}/{{ .Release.Name }}/postgres
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgres.backup.azure.secret.name }}
+        key: {{ .Values.postgres.backup.azure.secret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.postgres.backup.azure.compression }}
