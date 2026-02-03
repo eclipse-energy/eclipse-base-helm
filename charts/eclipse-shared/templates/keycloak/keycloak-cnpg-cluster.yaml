@@ -1,0 +1,16 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Release.Name }}-keycloak-postgres
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
+spec:
+  instances: {{ .Values.keycloak.postgres.replicaCount }}
+  imageName: {{ .Values.keycloak.postgres.image.name }}:{{ .Values.keycloak.postgres.image.version }}
+  bootstrap:
+    initdb:
+      database: keycloak
+      owner: {{ .Values.keycloak.postgres.username }}
+      secret:
+        name: {{ .Values.keycloak.postgres.secret.name }}
+  storage:
+    size: {{ .Values.keycloak.postgres.storageSize }}
