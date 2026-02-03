@@ -1,0 +1,14 @@
+{{- if eq .Values.timescaledb.enabled true }}
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: {{ .Release.Name }}-timescaledb
+spec:
+  cluster:
+    name: {{ .Release.Name }}-timescaledb
+  schedule: {{ .Values.timescaledb.backup.schedule }}
+  backupOwnerReference: self
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+{{- end }}
