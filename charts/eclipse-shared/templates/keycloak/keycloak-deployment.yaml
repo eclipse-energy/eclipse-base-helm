@@ -33,17 +33,17 @@ spec:
             - name: KC_DB
               value: "postgres"
             - name: KC_DB_URL
-              value: "jdbc:postgresql://{{ .Release.Name }}-keycloak-postgres:5432/keycloak"
+              value: "jdbc:postgresql://{{ .Release.Name }}-keycloak-postgres-rw:5432/keycloak"
             - name: KC_DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.keycloak.secret.name }}
-                  key: {{ .Values.keycloak.secret.postgres.usernameKey }}
+                  name: {{ .Values.keycloak.postgres.secret.name }}
+                  key: {{ .Values.keycloak.postgres.secret.usernameKey }}
             - name: KC_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.keycloak.secret.name }}
-                  key: {{ .Values.keycloak.secret.postgres.passwordKey }}
+                  name: {{ .Values.keycloak.postgres.secret.name }}
+                  key: {{ .Values.keycloak.postgres.secret.passwordKey }}
             {{- include "eclipse-shared.customEnvs" .Values.keycloak.customEnvs | indent 12 }}
           volumeMounts:
               - name: keycloak-theme-configmap

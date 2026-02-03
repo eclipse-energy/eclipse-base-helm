@@ -4,17 +4,17 @@ keycloak:
     name: quay.io/keycloak/keycloak
     version: 26.2
 
-  secret:
-    name: keycloak-secret
-    postgres:
-      usernameKey: postgres-username
-      passwordKey: postgres-password
-
   postgres:
     image:
-      name: postgres
+      name: ghcr.io/cloudnative-pg/postgresql
       version: 17.6
+    replicaCount: 1
     storageSize: 5Gi
+    username: keycloak_user
+    secret:
+      name: keycloak-secret
+      usernameKey: username
+      passwordKey: password
     customEnvs:
 
   ingress:
