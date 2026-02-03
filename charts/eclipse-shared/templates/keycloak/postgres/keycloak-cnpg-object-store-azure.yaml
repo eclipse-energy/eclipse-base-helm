@@ -1,0 +1,17 @@
+{{- if eq .Values.keycloak.enabled true }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-keycloak-postgres-azure
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.keycloak.postgres.backup.azure.retentionPolicy }}
+  configuration:
+    destinationPath: azure://{{ .Values.cluster.name }}/{{ .Release.Name }}/keycloak-postgres
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.keycloak.postgres.backup.azure.secret.name }}
+        key: {{ .Values.keycloak.postgres.backup.azure.secret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.keycloak.postgres.backup.azure.compression }}
+{{- end }}

@@ -1,3 +1,6 @@
+cluster:
+  name: dev
+
 keycloak:
   enabled: true
   image:
@@ -15,6 +18,14 @@ keycloak:
       name: keycloak-secret
       usernameKey: username
       passwordKey: password
+    backup:
+      schedule: "0 0 0 * * *"
+      azure:
+        retentionPolicy: 7d
+        compression: gzip
+        secret:
+          name: azure-secret
+          connectionStringKey: connectionString
     customEnvs:
 
   ingress:
