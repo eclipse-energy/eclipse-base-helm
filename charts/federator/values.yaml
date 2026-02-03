@@ -1,3 +1,6 @@
+cluster:
+  name: dev
+
 imagePullSecret:
   name: ghcr-secret
 
@@ -32,4 +35,12 @@ postgres:
     name: ghcr.io/cloudnative-pg/postgresql
     version: 17.6
   storageSize: 5Gi
+  backup:
+    schedule: "0 0 0 * * *"
+    azure:
+      retentionPolicy: 7d
+      compression: gzip
+      secret:
+        name: azure-secret
+        connectionStringKey: connectionString
   customEnvs:

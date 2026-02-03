@@ -14,3 +14,9 @@ spec:
         name: {{ .Values.postgres.secret.name }}
   storage:
     size: {{ .Values.postgres.storageSize }}
+
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: {{ .Release.Name }}-postgres
