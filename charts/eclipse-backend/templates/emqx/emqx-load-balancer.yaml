@@ -15,4 +15,7 @@ spec:
     - name: emqx-load-balancer-mtls
       port: {{ .Values.emqx.externalPortMTLS }}
       targetPort: 8884
+    - name: emqx-load-balancer-dashboard
+      port: {{ .Values.emqx.externalPortDashboard }}
+      targetPort: 18083
 {{- end }}

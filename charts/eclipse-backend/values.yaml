@@ -84,6 +84,7 @@ emqx:
   storageSize: 3Gi
   externalPortTLS: 8883
   externalPortMTLS: 8884
+  externalPortDashboard: 18083
   secret:
     name: emqx-secret
     mqttPasswordKey: mqttPassword
