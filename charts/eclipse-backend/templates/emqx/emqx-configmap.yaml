@@ -61,7 +61,7 @@ data:
         headers {Accept = "application/json"}
         refresh_interval = 300
         ssl {
-          enable = false
+          enable = true
         }
         use_jwks = true
         verify_claims {
