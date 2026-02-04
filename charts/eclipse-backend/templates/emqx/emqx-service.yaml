@@ -14,6 +14,9 @@ spec:
     - name: mqtt-tls
       port: 8883
       targetPort: mqtt-tls
+    - name: mqtt-mtls
+      port: 8884
+      targetPort: mqtt-mtls
     - name: dashboard
       port: 18083
       targetPort: dashboard
