@@ -33,7 +33,7 @@ spec:
             - name: EMQX_AUTHORIZATION__SOURCES__1__DATABASE
               value: eclipse-backend
             - name: EMQX_AUTHORIZATION__SOURCES__1__SERVER
-              value: {{ .Release.Name }}-timescaledb-ro:5432
+              value: {{ .Release.Name }}-timescaledb-r:5432
             - name: EMQX_DASHBOARD__DEFAULT_USERNAME
               valueFrom:
                 secretKeyRef:
