@@ -8,7 +8,7 @@ spec:
   stripPrefix:
     forceSlash: false
     prefixes:
-      - "/{{ .Values.emqx.ingress.path }}"
+      - "{{ .Values.emqx.ingress.path }}"
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
