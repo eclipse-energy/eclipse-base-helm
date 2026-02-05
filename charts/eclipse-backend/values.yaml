@@ -79,6 +79,9 @@ timescaledb:
   customEnvs:
 
 emqx:
+  ingress:
+    enabled: false
+    path: /emqx
   enabled: true
   replicaCount: 1
   storageSize: 3Gi

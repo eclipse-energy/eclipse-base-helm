@@ -1,0 +1,41 @@
+{{- if eq .Values.emqx.ingress.enabled true }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-emqx-strip-prefix-mw
+spec:
+  stripPrefix:
+    forceSlash: false
+    prefixes:
+      - "/{{ .Values.emqx.ingress.path }}"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Release.Name }}-emqx-strip-prefix-mw@kubernetescrd
+    {{- if eq .Values.ingress.tls.enabled true }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.clusterIssuer }}
+    {{- end }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: {{ default "/" .Values.emqx.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-emqx
+                port:
+                  name: dashboard
+
+  {{- if eq .Values.ingress.tls.enabled true }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+  {{- end }}
+
+{{- end }}
