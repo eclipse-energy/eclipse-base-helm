@@ -24,5 +24,6 @@
 
 Makefile
 values-local.yaml
+secrets-local.yaml
 
 out/
