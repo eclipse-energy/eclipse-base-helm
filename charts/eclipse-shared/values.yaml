@@ -54,3 +54,25 @@ ingress:
     enabled: false
     clusterIssuer:
     secretName:
+
+grafana:
+  enabled: true
+
+  customIngress:
+    enabled: false
+    path: /grafana
+
+  service:
+    enabled: false
+
+  persistence:
+    enabled: true
+
+  testFramework:
+    enabled: false
+
+  rbac:
+    create: false
+
+  serviceAccount:
+    create: false
