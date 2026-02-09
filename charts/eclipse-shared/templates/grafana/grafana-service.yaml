@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name}}-grafana
 spec:
   selector:
-    app: grafana # .Release.Name would only be supported with various overrides
+    {{- include "grafana.selectorLabels" . | nindent 4 }}
   ports:
     - name: grafana
       port: 3000
