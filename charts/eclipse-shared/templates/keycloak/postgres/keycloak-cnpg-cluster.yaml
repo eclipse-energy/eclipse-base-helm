@@ -11,14 +11,22 @@ spec:
   bootstrap:
   {{- if .Values.keycloak.postgres.restore.enabled }}
     recovery:
-      backup:
-        name: {{ .Release.Name }}-keycloak-postgres
+      source: {{ .Release.Name }}-keycloak-postgres-azure
   {{- else }}
     initdb:
       database: keycloak
       owner: {{ .Values.keycloak.postgres.username }}
       secret:
         name: {{ .Values.keycloak.postgres.secret.name }}
+  {{- end }}
+
+  {{- if .Values.keycloak.postgres.restore.enabled }}
+  externalClusters:
+    - name: {{ .Release.Name }}-keycloak-postgres-azure
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: {{ .Release.Name }}-keycloak-postgres-azure
   {{- end }}
 
   storage:
