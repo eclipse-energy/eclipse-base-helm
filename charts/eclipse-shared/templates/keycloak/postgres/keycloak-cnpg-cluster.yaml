@@ -8,11 +8,16 @@ spec:
   instances: {{ .Values.keycloak.postgres.replicaCount }}
   imageName: {{ .Values.keycloak.postgres.image.name }}:{{ .Values.keycloak.postgres.image.version }}
   bootstrap:
+  {{- if .Values.keycloak.postgres.restore.enabled }}
+    recovery:
+      source: {{ .Release.Name }}-keycloak-postgres-backup
+  {{- else }}
     initdb:
       database: keycloak
       owner: {{ .Values.keycloak.postgres.username }}
       secret:
         name: {{ .Values.keycloak.postgres.secret.name }}
+  {{- end }}
   storage:
     size: {{ .Values.keycloak.postgres.storageSize }}
 
@@ -21,4 +26,13 @@ spec:
       isWALArchiver: true
       parameters:
         barmanObjectName: {{ .Release.Name }}-keycloak-postgres-azure
+
+  {{- if .Values.keycloak.postgres.restore.enabled }}
+  externalClusters:
+    - name: {{ .Release.Name }}-keycloak-postgres-backup
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: {{ .Release.Name }}-keycloak-postgres-azure
+  {{- end }}
 {{- end }}

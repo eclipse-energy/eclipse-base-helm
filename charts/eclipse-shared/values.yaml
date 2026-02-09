@@ -26,6 +26,8 @@ keycloak:
         secret:
           name: azure-secret
           connectionStringKey: connectionString
+    restore:
+      enabled: false
     customEnvs:
 
   ingress:
