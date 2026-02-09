@@ -5,7 +5,8 @@ metadata:
   name: {{ .Release.Name}}-grafana
 spec:
   selector:
-    {{- include "grafana.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: grafana # Resolves to Grafana .Chart.Name
   ports:
     - name: grafana
       port: 3000
