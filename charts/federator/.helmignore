@@ -23,3 +23,4 @@
 .vscode/
 
 secrets-local.yaml
+values-local.yaml

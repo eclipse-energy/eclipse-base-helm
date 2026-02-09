@@ -24,3 +24,4 @@
 
 Makefile
 secrets-local.yaml
+values-local.yaml
