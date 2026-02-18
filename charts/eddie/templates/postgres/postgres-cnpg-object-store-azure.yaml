@@ -1,0 +1,19 @@
+{{- if eq .Values.postgres.enabled true }}
+{{- if eq .Values.postgres.objectStore.enabled true }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-postgres-azure
+  {{- include "eddie.postgres.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.postgres.backup.retentionPolicy }}
+  configuration:
+    destinationPath: azure://{{ .Values.cluster.name }}/{{ .Release.Name }}/keycloak-postgres
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgres.azure.secret.name }}
+        key: {{ .Values.postgres.azure.secret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.postgres.backup.compression }}
+{{- end }}
+{{- end }}

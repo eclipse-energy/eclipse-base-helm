@@ -1,0 +1,28 @@
+{{- if eq .Values.postgres.enabled true }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Release.Name }}-postgres
+  {{- include "eddie.postgres.labels" . | indent 2 }}
+spec:
+  instances: {{ .Values.postgres.replicaCount }}
+  imageName: {{ .Values.postgres.image.name }}:{{ .Values.postgres.image.version }}
+
+  bootstrap:
+    initdb:
+      database: {{ .Values.postgres.databaseName }}
+      owner: {{ .Values.postgres.username }}
+      secret:
+        name: {{ .Values.postgres.secret.name }}
+
+  storage:
+    size: {{ .Values.postgres.storageSize }}
+
+  {{- if eq .Values.postgres.objectStore.enabled true }}
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: {{ .Release.Name }}-postgres-azure
+  {{- end }}
+{{- end }}
