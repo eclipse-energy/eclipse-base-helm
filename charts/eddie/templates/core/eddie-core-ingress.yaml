@@ -1,19 +1,8 @@
 {{- if eq .Values.ingress.enabled true }}
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: {{ .Release.Name }}-core-strip-prefix-mw
-  namespace: {{ .Release.Namespace }}
-spec:
-  stripPrefix:
-    forceSlash: false
-    prefixes:
-      - "{{ .Values.ingress.path }}"
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-ingress-public
+  name: {{ .Release.Name }}-ingress
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}-ingress
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -43,29 +32,8 @@ spec:
     - {{ .Values.ingress.host }}
     secretName: {{ .Values.ingress.tls.secretName }}
 {{- end }}
+---
 {{- if eq .Values.ingress.management.enabled true }}
-{{- if .Values.ingress.management.basicAuthSecret }}
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: {{ .Release.Name }}-core-management-basic-auth-mw
-  namespace: {{ .Release.Namespace }}
-spec:
-  basicAuth:
-    secret: {{ .Values.ingress.management.basicAuthSecret }}
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: {{ .Release.Name }}-core-management-strip-prefix-mw
-  namespace: {{ .Release.Namespace }}
-spec:
-  stripPrefix:
-    forceSlash: false
-    prefixes:
-      - "{{ .Values.ingress.management.path }}"
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -79,7 +47,11 @@ metadata:
   {{- if eq .Values.ingress.tls.enabled true }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.clusterIssuer }}
   {{- end }}
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Release.Name }}-core-management-strip-prefix-mw@kubernetescrd,{{ .Release.Namespace }}-{{ .Release.Name }}-core-management-basic-auth-mw@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: >
+      {{ .Release.Namespace }}-{{ .Release.Name }}-core-management-strip-prefix-mw@kubernetescrd
+      {{- if .Values.ingress.management.basicAuth.enabled }}
+      ,{{ .Release.Namespace }}-{{ .Release.Name }}-core-management-basic-auth-mw@kubernetescrd
+      {{- end }}
 
 spec:
   rules:
@@ -98,7 +70,6 @@ spec:
     - hosts:
         - {{ .Values.ingress.host }}
       secretName: {{ .Values.ingress.tls.secretName }}
-{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

@@ -8,7 +8,9 @@ ingress:
   management:
     enabled: false
     path: /eddie-management
-    basicAuthSecret:
+    basicAuth:
+      enabled: true
+      secretName: eddie-basic-auth
   tls:
     enabled: false
     clusterIssuer:
