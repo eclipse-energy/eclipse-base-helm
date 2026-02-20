@@ -50,3 +50,10 @@ Helper to build the postgres Url
 {{- define "eddie.postgres-url" -}}
 "jdbc:postgresql://{{ .Release.Name }}-postgres-rw:5432/{{ .Values.postgres.databaseName }}"
 {{- end }}
+
+{{- define "eddie.extraEnv" -}}
+{{- range . }}
+- name: {{ .name }}
+  value: {{ .value | quote }}
+{{- end }}
+{{- end }}

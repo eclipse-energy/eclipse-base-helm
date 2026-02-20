@@ -5,6 +5,10 @@ ingress:
   enabled: false
   host:
   path: /eddie
+  management:
+    enabled: false
+    path: /eddie-management
+    basicAuthSecret:
   tls:
     enabled: false
     clusterIssuer:
@@ -17,11 +21,7 @@ core:
     name: eddie-core-secret
     jwtHmacSecretKey: jwtHmacSecret
     kafkaJaasConfigKey: kafkaJaasConfig
-
-  management:
-    url:
-    server:
-      urlPrefix:
+  extraEnv:
 
 postgres:
   enabled: true

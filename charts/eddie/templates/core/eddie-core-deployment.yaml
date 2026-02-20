@@ -23,7 +23,7 @@ spec:
               name: management
           env:
             - name: EDDIE_PUBLIC_URL
-              value: "{{ if eq .Values.ingress.tls.enabled true }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}/{{ .Values.ingress.path }}"
+              value: "{{ if eq .Values.ingress.tls.enabled true }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}{{ .Values.ingress.path }}"
             - name: EDDIE_JWT_HMAC_SECRET
               valueFrom:
                 secretKeyRef:
@@ -43,17 +43,16 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.postgres.secret.name }}
                   key: {{ .Values.postgres.secret.passwordKey }}
-            - name: SERVER_SERVLET_CONTEXT_PATH
-              value: {{ .Values.ingress.path }}
             - name: EDDIE_MANAGEMENT_URL
-              value: {{ .Values.core.management.url | quote }}
-            - name: EDDIE_MANAGEMENT_SERVER_URLPREFIX
-              value: {{ .Values.core.management.server.urlPrefix | quote }}
+              value: {{ .Values.core.management.url }}
+            - name: EDDIE_MANAGEMENT_SERVER_PORT # In Kubernetes there is no point in making this configurable since there will be no local port collisions
+              value: "9090"
             {{- include "eddie.region-connectors.at-eda.envs" . | indent 12 }}
             {{- include "eddie.outbound-connectors.admin-console.envs" . | indent 12 }}
             {{- include "eddie.outbound-connectors.kafka.envs" . | indent 12 }}
             - name: REGION_CONNECTOR_SIM_ENABLED
               value: {{ .Values.regionConnectors.simulation.enabled | quote }}
+            {{- include "eddie.extraEnv" .Values.core.extraEnv | indent 12 }}
           {{- if eq .Values.regionConnectors.atEda.enabled true }}
           volumeMounts:
             - name: ponton
