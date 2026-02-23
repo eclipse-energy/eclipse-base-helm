@@ -1,5 +1,4 @@
-{{- if eq .Values.postgres.enabled true }}
-{{- if eq .Values.postgres.objectStore.enabled true }}
+{{- if and (eq .Values.postgres.enabled true) (eq .Values.postgres.azure.objectStore.enabled true) }}
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
@@ -15,5 +14,4 @@ spec:
         key: {{ .Values.postgres.azure.secret.connectionStringKey }}
     wal:
       compression: {{ .Values.postgres.backup.compression }}
-{{- end }}
 {{- end }}

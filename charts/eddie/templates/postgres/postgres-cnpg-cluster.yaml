@@ -18,7 +18,7 @@ spec:
   storage:
     size: {{ .Values.postgres.storageSize }}
 
-  {{- if eq .Values.postgres.objectStore.enabled true }}
+  {{- if eq .Values.postgres.azure.objectStore.enabled true }}
   plugins:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true

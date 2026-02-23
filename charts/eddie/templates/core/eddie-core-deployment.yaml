@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-core
   {{- include "eddie.core.labels" . | indent 2 }}
 spec:
-  replicas: 1
+  replicas: 1 # Currently only single replica mode supported
   selector:
     matchLabels:
       app: {{ .Release.Name }}-core
@@ -45,8 +45,8 @@ spec:
                   key: {{ .Values.postgres.secret.passwordKey }}
             - name: EDDIE_MANAGEMENT_URL
               value: {{ .Values.core.management.url }}
-            - name: EDDIE_MANAGEMENT_SERVER_PORT # In Kubernetes there is no point in making this configurable since there will be no local port collisions
-              value: "9090"
+            - name: EDDIE_MANAGEMENT_SERVER_PORT
+              value: "9090" # In Kubernetes there is no point in making this configurable since there will be no local port collisions
             {{- include "eddie.region-connectors.at-eda.envs" . | indent 12 }}
             {{- include "eddie.outbound-connectors.admin-console.envs" . | indent 12 }}
             {{- include "eddie.outbound-connectors.kafka.envs" . | indent 12 }}
@@ -55,15 +55,12 @@ spec:
             {{- include "eddie.extraEnv" .Values.core.extraEnv | indent 12 }}
           {{- if eq .Values.regionConnectors.atEda.enabled true }}
           volumeMounts:
-            - name: ponton
-              mountPath: /opt/ponton
+            {{- include "eddie.region-connectors.at-eda.volume-mounts" . | indent 12 }}
           {{- end }}
 
       {{- if eq .Values.regionConnectors.atEda.enabled true }}
       volumes:
-        - name: ponton
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-core-ponton-pvc
+        {{- include "eddie.region-connectors.at-eda.volumes" . | indent 12 }}
       {{- end }}
 
       imagePullSecrets:

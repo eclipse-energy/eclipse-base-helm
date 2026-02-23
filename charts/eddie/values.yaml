@@ -2,9 +2,11 @@ imagePullSecret:
   name: ghcr-secret
 
 ingress:
-  enabled: false
   host:
-  path: /eddie
+  type: traefik
+  framework:
+    enabled: false
+    path: /eddie
   management:
     enabled: false
     path: /eddie-management
@@ -38,14 +40,14 @@ postgres:
     name: eddie-postgres-secret
     usernameKey: username
     passwordKey: password
-  objectStore:
-    enabled: true
   backup:
     enabled: true
     schedule: "0 0 0 * * *"
     retentionPolicy: 7d
     compression: gzip
   azure:
+    objectStore:
+      enabled: true
     secret:
       name: azure-secret
       connectionStringKey: connectionString

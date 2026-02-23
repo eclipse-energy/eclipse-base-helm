@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-kafka
   {{- include "eddie.kafka.labels" . | indent 2 }}
 spec:
-  replicas: {{ .Values.kafka.replicaCount }}
+  replicas: 1 # Currently only single replica mode supported
   selector:
     matchLabels:
       app: {{ .Release.Name }}-kafka

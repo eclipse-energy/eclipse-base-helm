@@ -1,19 +1,9 @@
 {{/*
-Environment variable mappings for Admin Console Outbound Connector
-*/}}
-{{- define "eddie.outbound-connectors.admin-console.envs" }}
-{{- $adminConsoleValues := .Values.outboundConnectors.adminConsole }}
-{{- $ocPrefix := "OUTBOUND_CONNECTOR_ADMIN_CONSOLE" }}
-- name: {{ $ocPrefix }}_ENABLED
-  value: {{ $adminConsoleValues.enabled | quote }}
-{{- end }}
-
-{{/*
 Environment variable mappings for Kafka Outbound Connector
 */}}
 {{- define "eddie.outbound-connectors.kafka.envs" }}
-{{- $kafkaValues := .Values.outboundConnectors.kafka }}
 {{- $ocPrefix := "OUTBOUND_CONNECTOR_KAFKA" }}
+{{- $kafkaValues := .Values.outboundConnectors.kafka }}
 - name: {{ $ocPrefix }}_ENABLED
   value: {{ $kafkaValues.enabled | quote }}
 {{- if eq $kafkaValues.enabled true }}

@@ -1,4 +1,4 @@
-{{- if eq .Values.ingress.enabled true }}
+{{- if eq .Values.ingress.framework.enabled true }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -9,17 +9,19 @@ metadata:
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
-  {{- if eq .Values.ingress.tls.enabled true }}
+    {{- if eq .Values.ingress.tls.enabled true }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.clusterIssuer }}
-  {{- end }}
+    {{- end }}
+    {{- if eq .Values.ingress.type "traefik" }}
     traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Release.Name }}-core-strip-prefix-mw@kubernetescrd
+    {{- end }}
 
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: {{ .Values.ingress.path }}
+          - path: {{ .Values.ingress.framework.path }}
             pathType: Prefix
             backend:
               service:
@@ -31,6 +33,7 @@ spec:
   - hosts:
     - {{ .Values.ingress.host }}
     secretName: {{ .Values.ingress.tls.secretName }}
+{{- end }}
 {{- end }}
 ---
 {{- if eq .Values.ingress.management.enabled true }}
@@ -44,14 +47,16 @@ metadata:
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
-  {{- if eq .Values.ingress.tls.enabled true }}
+    {{- if eq .Values.ingress.tls.enabled true }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.clusterIssuer }}
-  {{- end }}
+    {{- end }}
+    {{- if eq .Values.ingress.type "traefik" }}
     traefik.ingress.kubernetes.io/router.middlewares: >
       {{ .Release.Namespace }}-{{ .Release.Name }}-core-management-strip-prefix-mw@kubernetescrd
       {{- if .Values.ingress.management.basicAuth.enabled }}
       ,{{ .Release.Namespace }}-{{ .Release.Name }}-core-management-basic-auth-mw@kubernetescrd
       {{- end }}
+    {{- end }}
 
 spec:
   rules:
@@ -70,6 +75,5 @@ spec:
     - hosts:
         - {{ .Values.ingress.host }}
       secretName: {{ .Values.ingress.tls.secretName }}
-{{- end }}
 {{- end }}
 {{- end }}

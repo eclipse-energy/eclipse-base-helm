@@ -3,12 +3,12 @@ Environment variable mappings for AT EDA region connector
 */}}
 {{- define "eddie.region-connectors.at-eda.envs" }}
 {{- $edaValues := .Values.regionConnectors.atEda }}
-{{- $pontonValues := .Values.regionConnectors.atEda.pontonMessenger }}
 {{- $rcPrefix := "REGION_CONNECTOR_AT_EDA" }}
-{{- $pontonPrefix := "REGION_CONNECTOR_AT_EDA_PONTON_MESSENGER" }}
-{{- if eq $edaValues.enabled true }}
 - name: {{ $rcPrefix }}_ENABLED
   value: {{ $edaValues.enabled | quote }}
+{{- if eq $edaValues.enabled true }}
+{{- $pontonValues := .Values.regionConnectors.atEda.pontonMessenger }}
+{{- $pontonPrefix := "REGION_CONNECTOR_AT_EDA_PONTON_MESSENGER" }}
 - name: {{ $rcPrefix }}_ELIGIBLEPARTY_ID
   value: {{ $edaValues.eligiblePartyId | quote }}
 - name: {{ $pontonPrefix }}_ADAPTER_ID
@@ -34,4 +34,21 @@ Environment variable mappings for AT EDA region connector
       name: {{ .Release.Name }}-region-connector-secrets
       key: pontonPassword
 {{- end }}
+{{- end }}
+
+{{/*
+Volumes for AT EDA region connector
+*/}}
+{{- define "eddie.region-connectors.at-eda.volumes" }}
+- name: ponton
+  persistentVolumeClaim:
+    claimName: {{ .Release.Name }}-core-ponton-pvc
+{{- end }}
+
+{{/*
+Volume Mounts for AT EDA region connector
+*/}}
+{{- define "eddie.region-connectors.at-eda.volume-mounts" }}
+- name: ponton
+  mountPath: /opt/ponton
 {{- end }}

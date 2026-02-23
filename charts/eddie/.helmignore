@@ -26,3 +26,4 @@ values-local.yaml
 secrets-local.yaml
 
 docker/
+core/eddie-core-ingress-save.yaml

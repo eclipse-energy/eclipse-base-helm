@@ -1,5 +1,4 @@
-{{- if eq .Values.core.enabled true }}
-{{- if eq .Values.regionConnectors.atEda.enabled true }}
+{{- if and (eq .Values.core.enabled true) (eq .Values.regionConnectors.atEda.enabled true)  }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -11,5 +10,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.regionConnectors.atEda.pontonVolume.storageSize }}
-{{- end }}
 {{- end }}
