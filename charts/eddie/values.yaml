@@ -25,6 +25,8 @@ core:
     name: eddie-core-secret
     jwtHmacSecretKey: jwtHmacSecret
     kafkaJaasConfigKey: kafkaJaasConfig
+  management:
+    url:
   extraEnv:
 
 postgres:
