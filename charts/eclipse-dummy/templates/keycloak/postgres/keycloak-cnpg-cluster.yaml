@@ -1,4 +1,4 @@
-{{- if eq .Values.keycloak.enabled true }}
+{{- if .Values.keycloak.enabled }}
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -8,11 +8,12 @@ spec:
   instances: {{ .Values.keycloak.postgres.replicaCount }}
   imageName: {{ .Values.keycloak.postgres.image.name }}:{{ .Values.keycloak.postgres.image.version }}
 
-  bootstrap:
   {{- if .Values.keycloak.postgres.restore.enabled }}
+  bootstrap:
     recovery:
       source: keycloak-recovery-source
   {{- else }}
+  bootstrap:
     initdb:
       database: keycloak
       owner: {{ .Values.keycloak.postgres.username }}
@@ -27,14 +28,12 @@ spec:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters:
-        barmanObjectName: {{ .Release.Name }}-keycloak-postgres-azure
+        barmanObjectName: {{ .Release.Name }}-keycloak-postgres-azure-new
 
-  {{- if .Values.keycloak.postgres.restore.enabled }}
   externalClusters:
     - name: keycloak-recovery-source
       plugin:
         name: barman-cloud.cloudnative-pg.io
         parameters:
           barmanObjectName: {{ .Release.Name }}-keycloak-postgres-azure
-  {{- end }}
 {{- end }}

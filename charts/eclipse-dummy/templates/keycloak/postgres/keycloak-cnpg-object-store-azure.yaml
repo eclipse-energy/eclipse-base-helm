@@ -1,0 +1,35 @@
+{{- if eq .Values.keycloak.enabled true }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-keycloak-postgres-azure
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.keycloak.postgres.backup.azure.retentionPolicy }}
+  configuration:
+    destinationPath: https://{{ .Values.keycloak.postgres.backup.azure.storageAccount }}.blob.core.windows.net/{{ .Values.keycloak.postgres.backup.azure.containerName }}/dummy-new2
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.keycloak.postgres.backup.azure.secret.name }}
+        key: {{ .Values.keycloak.postgres.backup.azure.secret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.keycloak.postgres.backup.azure.compression }}
+{{- end }}
+---
+{{- if eq .Values.keycloak.enabled true }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-keycloak-postgres-azure-new
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.keycloak.postgres.backup.azure.retentionPolicy }}
+  configuration:
+    destinationPath: https://{{ .Values.keycloak.postgres.backup.azure.storageAccount }}.blob.core.windows.net/{{ .Values.keycloak.postgres.backup.azure.containerName }}/dummy-new3
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.keycloak.postgres.backup.azure.secret.name }}
+        key: {{ .Values.keycloak.postgres.backup.azure.secret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.keycloak.postgres.backup.azure.compression }}
+{{- end }}
