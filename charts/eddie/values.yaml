@@ -57,6 +57,8 @@ postgres:
 
 
 regionConnectors:
+  secret:
+    name: eddie-region-connector-secrets
   atEda:
     enabled: true
     eligiblePartyId:
