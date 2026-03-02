@@ -35,3 +35,9 @@ Metadata for federator components.
   version: {{ .Chart.Version }}
 {{- end }}
 
+{{/*
+Azure Objectstore Destination Path helper
+*/}}
+{{- define "federator.postgres.object-store.destination-path" -}}
+azure://{{ .blobStorage.storageName }}.blob.core.windows.net/{{ .blobStorage.containerName }}{{ if .blobStorage.blobName}}/{{ .blobStorage.blobName }}{{- end }}
+{{- end }}

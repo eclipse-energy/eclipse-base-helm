@@ -25,7 +25,7 @@ ingress:
     secretName:
 
 postgres:
-  enabled: true
+  enabled: true # disable once before recoverObjectStore to delete cluster
 
   image:
     name: ghcr.io/cloudnative-pg/postgresql
