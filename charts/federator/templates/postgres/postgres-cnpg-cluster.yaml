@@ -10,17 +10,15 @@ spec:
   bootstrap:
     {{- if eq .Values.postgres.bootstrapMode "initdb" }}
     initdb:
+    {{- end }}
+    {{- if eq .Values.postgres.bootstrapMode "recoverObjectStore" }}
+    recovery:
+      source: recoverySource
+    {{- end }}
       database: {{ .Values.postgres.database }}
       owner: {{ .Values.postgres.owner }}
       secret:
         name: {{ .Values.postgres.secret.name }}
-    {{- end }}
-    {{- if eq .Values.postgres.bootstrapMode "recoverObjectStore" }}
-      recovery:
-        source: recoverySource
-        database: {{ .Values.postgres.database }}
-        owner: {{ .Values.postgres.owner }}
-    {{- end }}
   storage:
     size: {{ .Values.postgres.storageSize }}
 
