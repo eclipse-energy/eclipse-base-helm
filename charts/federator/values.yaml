@@ -25,22 +25,47 @@ ingress:
     secretName:
 
 postgres:
-  replicaCount: 1
-  username: federator_user
+  enabled: true
+
+  image:
+    name: ghcr.io/cloudnative-pg/postgresql
+    version: 17.6
+
   secret:
     name: postgres-secret
     usernameKey: username
     passwordKey: password
-  image:
-    name: ghcr.io/cloudnative-pg/postgresql
-    version: 17.6
-  storageSize: 5Gi
+
+  instances: 1
+  bootstrapMode: initdb # initdb for creation, recoverObjectStore for recovery
+  database: federator
+  owner: federator_user
+  storageSize: 10Gi
+
+  objectStore:
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
+  recoveryObjectStore: # only required with bootstrapMode recoverObjectStore
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
   backup:
+    enabled: true
     schedule: "0 0 0 * * *"
-    azure:
-      retentionPolicy: 7d
-      compression: gzip
-      secret:
-        name: azure-secret
-        connectionStringKey: connectionString
+
   customEnvs:

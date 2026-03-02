@@ -1,15 +1,36 @@
+{{- if eq .Values.postgres.enabled true }}
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
   name: {{ .Release.Name }}-postgres
   {{- include "federator.postgres.labels" . | indent 2 }}
 spec:
-  retentionPolicy: {{ .Values.postgres.backup.azure.retentionPolicy }}
+  retentionPolicy: {{ .Values.postgres.objectStore.retentionPolicy }}
   configuration:
-    destinationPath: azure://{{ .Values.cluster.name }}/{{ .Release.Name }}/postgres
+    destinationPath: azure://{{ .Values.postgres.objectStore.blobStorage.storageName }}.blob.core.windows.net/{{ .Values.postgres.objectStore.blobStorage.containerName }}/{{  .Values.postgres.objectStore.blobStorage.blobName  }}
     azureCredentials:
       connectionString:
-        name: {{ .Values.postgres.backup.azure.secret.name }}
-        key: {{ .Values.postgres.backup.azure.secret.connectionStringKey }}
+        name: {{ .Values.postgres.objectStore.azureSecret.name }}
+        key: {{ .Values.postgres.objectStore.azureSecret.connectionStringKey }}
     wal:
-      compression: {{ .Values.postgres.backup.azure.compression }}
+      compression: {{ .Values.postgres.objectStore.compression }}
+---
+{{- if eq .Values.postgres.bootstrapMode "recoverObjectStore" }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-postgres-recover
+  {{- include "federator.postgres.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.postgres.recoveryObjectStore.retentionPolicy }}
+  configuration:
+    destinationPath: azure://{{ .Values.postgres.recoveryObjectStore.blobStorage.storageName }}.blob.core.windows.net/{{ .Values.postgres.recoveryObjectStore.blobStorage.containerName }}/{{  .Values.postgres.recoveryObjectStore.blobStorage.blobName  }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgres.recoveryObjectStore.azureSecret.name }}
+        key: {{ .Values.postgres.recoveryObjectStore.azureSecret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.postgres.recoveryObjectStore.compression }}
+---
+{{- end }}
+{{- end }}
