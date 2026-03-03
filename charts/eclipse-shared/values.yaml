@@ -8,26 +8,49 @@ keycloak:
     version: 26.2
 
   postgres:
+    enabled: true
     image:
       name: ghcr.io/cloudnative-pg/postgresql
       version: 17.6
-    replicaCount: 1
-    storageSize: 5Gi
-    username: keycloak_user
+
+    bootstrapMode: initdb # initdb for creation, recoverObjectStore for recovery
+    database: keycloak
+    owner: keycloak_user
+    instances: 1
+    storageSize: 10Gi
+
     secret:
       name: keycloak-secret
       usernameKey: username
       passwordKey: password
+
+    objectStore:
+      blobStorage: # fill in values from azure
+        storageName:
+        containerName:
+        blobName:
+      retentionPolicy: 7d
+      compression: gzip
+      azureSecret:
+        name: azure-secret
+        connectionStringKey: connectionString
+
+    recoveryObjectStore: # only required with bootstrapMode recoverObjectStore
+      blobStorage: # fill in values from azure
+        storageName:
+        containerName:
+        blobName:
+      retentionPolicy: 7d
+      compression: gzip
+      azureSecret:
+        name: azure-secret
+        connectionStringKey: connectionString
+
     backup:
+      enabled: true
       schedule: "0 0 0 * * *"
-      azure:
-        retentionPolicy: 7d
-        compression: gzip
-        secret:
-          name: azure-secret
-          connectionStringKey: connectionString
-    restore:
-      enabled: false
+
+
     customEnvs:
 
   ingress:

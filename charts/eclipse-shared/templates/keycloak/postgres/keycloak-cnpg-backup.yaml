@@ -1,14 +1,18 @@
-{{- if eq .Values.keycloak.enabled true }}
+{{- if and (eq .Values.keycloak.enabled true) (eq .Values.keycloak.postgres.enabled true) (eq .Values.keycloak.postgres.backup.enabled true) }}
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
   name: {{ .Release.Name }}-keycloak-postgres
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
 spec:
   cluster:
     name: {{ .Release.Name }}-keycloak-postgres
+  immediate: true
   schedule: {{ .Values.keycloak.postgres.backup.schedule }}
   backupOwnerReference: self
   method: plugin
   pluginConfiguration:
     name: barman-cloud.cloudnative-pg.io
+    parameters:
+      barmanObjectName: {{ .Release.Name }}-keycloak-postgres
 {{- end }}
