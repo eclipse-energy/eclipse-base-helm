@@ -1,0 +1,116 @@
+{{- if eq .Values.kafka.enabled true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-kafka
+  {{- include "eddie.kafka.labels" . | indent 2 }}
+spec:
+  replicas: 1 # Currently only single replica mode supported
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-kafka
+  template:
+    metadata:
+    {{- include "eddie.kafka.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: kafka
+          image: "{{ .Values.kafka.image.name }}:{{ .Values.kafka.image.version }}"
+          ports:
+            - containerPort: 9092
+              name: container
+            - containerPort: 9093
+              name: controller
+            - containerPort: 9094
+              name: cluster
+            - containerPort: {{ .Values.kafka.externalPort }}
+              name: external
+          env:
+            # KRaft settings
+            - name: KAFKA_NODE_ID
+              value: "0"
+            - name: KAFKA_PROCESS_ROLES
+              value: "controller,broker"
+            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+              value: "0@localhost:9093"
+            # Listeners
+            - name: KAFKA_LISTENERS
+              value: "INTERNAL://:9092,CONTROLLER://:9093,CLUSTER://:9094,EXTERNAL://:{{ .Values.kafka.externalPort }}"
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "INTERNAL://localhost:9092,CLUSTER://{{ .Release.Name }}-kafka:9094,EXTERNAL://{{ .Values.ingress.host }}:{{ .Values.kafka.externalPort }}"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "INTERNAL:SASL_PLAINTEXT,CONTROLLER:SASL_PLAINTEXT,CLUSTER:SASL_PLAINTEXT,EXTERNAL:SASL_SSL"
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "INTERNAL"
+            # Big messages produced for validated historical data
+            # See: https://stackoverflow.com/questions/63528508/recordtoolargeexception-in-kafka
+            - name: KAFKA_SOCKET_RECEIVE_BUFFER_BYTES
+              value: "102400"
+            - name: KAFKA_SOCKET_SEND_BUFFER_BYTES
+              value: "102400"
+            - name: KAFKA_SOCKET_REQUEST_MAX_BYTES
+              value: "104857600"
+            - name: KAFKA_MESSAGE_MAX_BYTES
+              value: "104857600"
+            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_SASL_ENABLED_MECHANISMS
+              value: "SCRAM-SHA-512,PLAIN"
+            - name: KAFKA_OPTS
+              value: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+            - name: KAFKA_AUTHORIZER_CLASS_NAME
+              value: "org.apache.kafka.metadata.authorizer.StandardAuthorizer"
+            - name: KAFKA_SASL_MECHANISM_CLUSTER_PROTOCOL
+              value: "PLAIN"
+            - name: KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL
+              value: "PLAIN"
+            - name: KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL
+              value: "PLAIN"
+            - name: KAFKA_SSL_KEYSTORE_LOCATION
+              value: "/etc/kafka/secrets/kafka.keystore.jks"
+            - name: KAFKA_SSL_TRUSTSTORE_LOCATION
+              value: "/etc/kafka/secrets/kafka.truststore.jks"
+            - name: KAFKA_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.kafka.secret.name }}
+                  key: {{ .Values.kafka.secret.keystorePasswordKey }}
+            - name: KAFKA_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.kafka.secret.name }}
+                  key: {{ .Values.kafka.secret.truststorePasswordKey }}
+            - name: KAFKA_SUPER_USERS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.kafka.secret.name }}
+                  key: {{ .Values.kafka.secret.superUsersKey }}
+          volumeMounts:
+            - name: kafka-secret
+              mountPath: /etc/kafka/kafka_server_jaas.conf
+              subPath: {{ .Values.kafka.secret.jaasConfigKey }}
+            - name: kafka-secret
+              mountPath: /etc/kafka/secrets/kafka.truststore.jks
+              subPath: {{ .Values.kafka.secret.truststoreKey }}
+              readOnly: true
+            - name: kafka-secret
+              mountPath: /etc/kafka/secrets/kafka.keystore.jks
+              subPath: {{ .Values.kafka.secret.keystoreKey }}
+              readOnly: true
+            - name: kafka-data
+              mountPath: /tmp/kafka-logs/
+      volumes:
+        - name: kafka-secret
+          secret:
+            secretName: {{ .Values.kafka.secret.name }}
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-kafka-pvc
+
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
+{{- end }}
