@@ -117,6 +117,8 @@ emqx:
     dashboardUsernameKey: dashboardUsername
     dashboardPasswordKey: dashboardPassword
     sslKeyKey: server.key
+    serverCertKey: server.crt
+    caCertKey: ca.crt
   image:
     name: emqx/emqx
     version: 6.1.0
