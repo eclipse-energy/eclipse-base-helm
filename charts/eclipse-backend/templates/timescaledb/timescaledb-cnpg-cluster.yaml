@@ -17,7 +17,7 @@ spec:
     initdb:
       postInitTemplateSQL:
         - CREATE EXTENSION IF NOT EXISTS timescaledb;
-        - ALTER ROLE "{{ .Values.timescaledb.username }}" WITH CREATEROLE;
+        - ALTER ROLE "{{ .Values.timescaledb.owner }}" WITH CREATEROLE;
     {{- end }}
     {{- if eq .Values.timescaledb.bootstrapMode "recoverObjectStore" }}
     recovery:
