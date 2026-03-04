@@ -72,6 +72,7 @@ spec:
               subPath: replace-password-with-env.sh
             - name: {{ .Values.emqx.secret.name }}
               subPath: {{ .Values.emqx.secret.serverCertKey }}
+              mountPath: /opt/emqx/etc/certs/cert.pem
             - name: {{ .Values.emqx.secret.name }}
               subPath: {{ .Values.emqx.secret.caCertKey }}
               mountPath: /opt/emqx/etc/certs/cacert.pem
