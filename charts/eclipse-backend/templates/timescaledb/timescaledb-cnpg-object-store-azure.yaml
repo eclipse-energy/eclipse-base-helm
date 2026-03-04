@@ -2,16 +2,35 @@
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: {{ .Release.Name }}-timescaledb-azure
+  name: {{ .Release.Name }}-timescaledb
   {{- include "eclipse-backend.timescaledb.labels" . | indent 2 }}
 spec:
-  retentionPolicy: {{ .Values.timescaledb.backup.azure.retentionPolicy }}
+  retentionPolicy: {{ .Values.timescaledb.objectStore.retentionPolicy }}
   configuration:
-    destinationPath: azure://{{ .Values.cluster.name }}/{{ .Release.Name }}/timescaledb
+    destinationPath: {{ include "eclipse-backend.timescaledb.object-store.destination-path" .Values.timescaledb.objectStore }}
     azureCredentials:
       connectionString:
-        name: {{ .Values.timescaledb.backup.azure.secret.name }}
-        key: {{ .Values.timescaledb.backup.azure.secret.connectionStringKey }}
+        name: {{ .Values.timescaledb.objectStore.azureSecret.name }}
+        key: {{ .Values.timescaledb.objectStore.azureSecret.connectionStringKey }}
     wal:
-      compression: {{ .Values.timescaledb.backup.azure.compression }}
+      compression: {{ .Values.timescaledb.objectStore.compression }}
+---
+{{- if eq .Values.timescaledb.bootstrapMode "recoverObjectStore" }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-timescaledb-recover
+  {{- include "eclipse-backend.timescaledb.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.timescaledb.recoveryObjectStore.retentionPolicy }}
+  configuration:
+    destinationPath: {{ include "eclipse-backend.timescaledb.object-store.destination-path" .Values.timescaledb.recoveryObjectStore }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.timescaledb.recoveryObjectStore.azureSecret.name }}
+        key: {{ .Values.timescaledb.recoveryObjectStore.azureSecret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.timescaledb.recoveryObjectStore.compression }}
+---
+{{- end }}
 {{- end }}

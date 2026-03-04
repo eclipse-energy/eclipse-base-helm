@@ -57,25 +57,47 @@ core:
   customEnvs:
 
 timescaledb:
-  enabled: true
-  replicaCount: 1
-  storageSize: 5Gi
+  enabled: true # disable once before recoverObjectStore to delete cluster
+  storageSize: 10Gi
+  instances: 1
+  bootstrapMode: initdb # initdb for creation, recoverObjectStore for recovery
+  database: eclipse-backend
+  owner: eclipse_user
+
   image:
     name: ghcr.io/imusmanmalik/timescaledb-postgis
     version: 17-3.5-98
-  username: eclipse_user
+
   secret:
     name: timescaledb-secret
     usernameKey: username
     passwordKey: password
+
+  objectStore:
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
+  recoveryObjectStore: # only required with bootstrapMode recoverObjectStore
+    blobStorage: # fill in values from azure
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
   backup:
+    enabled: true
     schedule: "0 0 0 * * *"
-    azure:
-      retentionPolicy: 7d
-      compression: gzip
-      secret:
-        name: azure-secret
-        connectionStringKey: connectionString
+
   customEnvs:
 
 emqx:

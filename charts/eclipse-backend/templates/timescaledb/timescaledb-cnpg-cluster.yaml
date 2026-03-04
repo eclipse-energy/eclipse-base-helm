@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-timescaledb
   {{- include "eclipse-backend.timescaledb.labels" . | indent 2 }}
 spec:
-  instances: {{ .Values.timescaledb.replicaCount }}
+  instances: {{ .Values.timescaledb.instances }}
   imageName: {{ .Values.timescaledb.image.name }}:{{ .Values.timescaledb.image.version }}
 
   postgresql:
@@ -13,14 +13,20 @@ spec:
       - timescaledb
 
   bootstrap:
+    {{- if eq .Values.timescaledb.bootstrapMode "initdb" }}
     initdb:
-      database: eclipse-backend
-      owner: {{ .Values.timescaledb.username }}
-      secret:
-        name: {{ .Values.timescaledb.secret.name }}
       postInitTemplateSQL:
         - CREATE EXTENSION IF NOT EXISTS timescaledb;
         - ALTER ROLE "{{ .Values.timescaledb.username }}" WITH CREATEROLE;
+    {{- end }}
+    {{- if eq .Values.timescaledb.bootstrapMode "recoverObjectStore" }}
+    recovery:
+      source: recoverySource
+    {{- end }}
+      database: {{ .Values.timescaledb.database }}
+      owner: {{ .Values.timescaledb.owner }}
+      secret:
+        name: {{ .Values.timescaledb.secret.name }}
   storage:
     size: {{ .Values.timescaledb.storageSize }}
 
@@ -28,5 +34,14 @@ spec:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters:
-        barmanObjectName: {{ .Release.Name }}-timescaledb-azure
+        barmanObjectName: {{ $.Release.Name }}-timescaledb
+
+  {{- if eq .Values.timescaledb.bootstrapMode "recoverObjectStore" }}
+  externalClusters:
+    - name: recoverySource
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: {{ .Release.Name }}-timescaledb-recover
+  {{- end }}
 {{- end }}

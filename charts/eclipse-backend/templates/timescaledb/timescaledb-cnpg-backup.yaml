@@ -1,14 +1,18 @@
-{{- if eq .Values.timescaledb.enabled true }}
+{{- if and (eq .Values.timescaledb.enabled true) (eq .Values.timescaledb.backup.enabled true) }}
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
   name: {{ .Release.Name }}-timescaledb
+  {{- include "eclipse-backend.timescaledb.labels" . | indent 2 }}
 spec:
   cluster:
     name: {{ .Release.Name }}-timescaledb
+  immediate: true
   schedule: {{ .Values.timescaledb.backup.schedule }}
   backupOwnerReference: self
   method: plugin
   pluginConfiguration:
     name: barman-cloud.cloudnative-pg.io
+    parameters:
+      barmanObjectName: {{ .Release.Name }}-timescaledb
 {{- end }}
