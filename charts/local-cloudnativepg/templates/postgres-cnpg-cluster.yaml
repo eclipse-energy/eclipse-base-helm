@@ -1,0 +1,40 @@
+{{- if eq .Values.postgres.enabled true }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Release.Name }}-postgres
+spec:
+  instances: {{ .Values.postgres.instances }}
+  imageName: {{ .Values.postgres.image.name }}:{{ .Values.postgres.image.version }}
+  bootstrap:
+    {{- if eq .Values.postgres.bootstrapMode "initdb" }}
+    initdb:
+      database: {{ .Values.postgres.database }}
+      owner: {{ .Values.postgres.owner }}
+      secret:
+        name: {{ .Values.postgres.secretName }}
+    {{- end }}
+    {{- if eq .Values.postgres.bootstrapMode "recoverObjectStore" }}
+      recovery:
+        source: recoverySource
+        database: {{ .Values.postgres.database }}
+        owner: {{ .Values.postgres.owner }}
+    {{- end }}
+  storage:
+    size: {{ .Values.postgres.storageSize }}
+
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: {{ $.Release.Name }}-postgres-{{ .Values.postgres.objectStore.name }}
+
+  {{- if eq .Values.postgres.bootstrapMode "recoverObjectStore" }}
+  externalClusters:
+    - name: recoverySource
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: {{ .Release.Name }}-postgres-recover
+  {{- end }}
+{{- end }}

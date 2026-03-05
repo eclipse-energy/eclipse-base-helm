@@ -1,0 +1,41 @@
+cluster:
+  name: dev
+
+postgres:
+  enabled: true
+  image:
+    name: ghcr.io/cloudnative-pg/postgresql
+    version: 17.6
+
+  instances: 1
+  bootstrapMode: recoverObjectStore # initdb for creation, recoverObjectStore for recovery
+  database: db
+  owner: db_user
+  secretName: db-secret
+  storageSize: 1Gi
+
+  objectStore:
+    blobStorage:
+      storageName: eclipsebackuppg
+      containerName: dev
+      blobName: local-cloudnativepg-v2
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connection-strin jg
+
+  recoveryObjectStore:
+    blobStorage: # these values must fit the values from azure
+      storageName: eclipsebackuppg
+      containerName: dev
+      blobName: local-cloudnativepg-v1
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connection-string
+
+  backup:
+    enabled: true
+    schedule: "0 0 0 * * *"

@@ -1,0 +1,34 @@
+{{- if eq .Values.postgres.enabled true }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-postgres
+spec:
+  retentionPolicy: {{ .Values.postgres.objectStore.retentionPolicy }}
+  configuration:
+    destinationPath: azure://{{ .Values.postgres.objectStore.blobStorage.storageName }}.blob.core.windows.net/{{ .Values.postgres.objectStore.blobStorage.containerName }}/{{  .Values.postgres.objectStore.blobStorage.blobName  }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgres.objectStore.azureSecret.name }}
+        key: {{ .Values.postgres.objectStore.azureSecret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.postgres.objectStore.compression }}
+---
+{{- if eq .Values.postgres.bootstrapMode "recoverObjectStore" }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-postgres-recover
+spec:
+  retentionPolicy: {{ .Values.postgres.recoveryObjectStore.retentionPolicy }}
+  configuration:
+    destinationPath: azure://{{ .Values.postgres.recoveryObjectStore.blobStorage.storageName }}.blob.core.windows.net/{{ .Values.postgres.recoveryObjectStore.blobStorage.containerName }}/{{  .Values.postgres.recoveryObjectStore.blobStorage.blobName  }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgres.recoveryObjectStore.azureSecret.name }}
+        key: {{ .Values.postgres.recoveryObjectStore.azureSecret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.postgres.recoveryObjectStore.compression }}
+---
+{{- end }}
+{{- end }}
