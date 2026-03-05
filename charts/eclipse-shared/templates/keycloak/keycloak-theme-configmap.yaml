@@ -199,6 +199,27 @@ data:
         padding: 1rem;
         width: 100%;
     }
+    
+    .pf-c-dropdown__menu {
+      display: none;
+      min-width: unset;
+      left: 0;
+      right: unset !important;
+    }
+
+    #kc-locale-dropdown > button {
+      font-size: 1rem;
+      background: transparent;
+      border: 1px solid;
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+
+      &:after {
+          content: "🌐";
+      }
+    }
+    
       
   theme.properties: |
     parent=keycloak
