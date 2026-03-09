@@ -19,6 +19,8 @@ core:
   federator:
     url: "https://eclipse-dev.projekte.fh-hagenberg.at/federator"
   encryptedInstallerToken: ""
+  ports:
+    configurationApi: 8080
   loggingLevel:
     root:
     aiida:
@@ -75,3 +77,24 @@ external:
   encryptedMqttPassword: ""
   encryptedDashboardUsername: ""
   encryptedDashboardPassword: ""
+
+matter:
+  enabled: true
+  
+  server:
+    image:
+      name: ghcr.io/home-assistant-libs/python-matter-server
+      version: stable
+    storagePath: /matter-server-data
+    storageSize: 100Mi
+    ports:
+      ws: 5580
+
+  bridge:
+    image:
+      name: ghcr.io/eclipse-energy/eclipse-matter-bridge
+      version: latest
+    deviceStoragePath: /app/data/devices
+    storageSize: 100Mi
+    ports:
+      http: 8181

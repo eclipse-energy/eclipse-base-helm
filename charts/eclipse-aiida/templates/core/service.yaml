@@ -9,5 +9,5 @@ spec:
   ports:
     - name: core
       targetPort: core
-      port: 8080
+      port: {{ .Values.core.ports.configurationApi }}
 {{- end }}
