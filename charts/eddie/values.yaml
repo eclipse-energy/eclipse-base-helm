@@ -21,6 +21,25 @@ ingress:
 core:
   version: nightly-20260217
   enabled: true
+  demoButton:
+    enabled: false
+  dataNeedsConfig:
+    source: config # or database
+    dataNeeds:
+    - id: "68ecd9c1-958c-4206-aee9-c97049778740"
+      type: "validated"
+      name: "Last year and next 3 years 15min to 1d"
+      description: "Example DataNeed"
+      purpose: "Example DataNeed"
+      policyLink: ""
+      duration:
+        type: "relativeDuration"
+        start: "P-1Y"
+        end: "P3Y"
+      energyType: "ELECTRICITY"
+      minGranularity: "PT15M"
+      maxGranularity: "P1D"
+
   secret:
     name: eddie-core-secret
     jwtHmacSecretKey: jwtHmacSecret
@@ -60,7 +79,7 @@ regionConnectors:
   secret:
     name: eddie-region-connector-secrets
   atEda:
-    enabled: true
+    enabled: false
     eligiblePartyId:
     pontonMessenger:
       adapter:

@@ -40,15 +40,19 @@ Environment variable mappings for AT EDA region connector
 Volumes for AT EDA region connector
 */}}
 {{- define "eddie.region-connectors.at-eda.volumes" }}
+{{- if eq .Values.regionConnectors.atEda.enabled true }}
 - name: ponton
   persistentVolumeClaim:
     claimName: {{ .Release.Name }}-core-ponton-pvc
+{{- end }}
 {{- end }}
 
 {{/*
 Volume Mounts for AT EDA region connector
 */}}
 {{- define "eddie.region-connectors.at-eda.volume-mounts" }}
+{{- if eq .Values.regionConnectors.atEda.enabled true }}
 - name: ponton
   mountPath: /opt/ponton
+{{- end }}
 {{- end }}
