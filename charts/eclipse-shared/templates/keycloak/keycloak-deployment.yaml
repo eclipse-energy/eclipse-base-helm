@@ -57,6 +57,10 @@ spec:
                 path: login/theme.properties
               - key: styles.css
                 path: login/resources/css/styles.css
-              - key: eclipse.svg
-                path: login/resources/images/eclipse.svg
+              - key: Fhooe-logo.svg
+                path: login/resources/images/Fhooe-logo.svg
+              - key: messages_de.properties
+                path: login/messages/messages_de.properties
+              - key: messages_en.properties
+                path: login/messages/messages_en.properties
 {{- end }}
