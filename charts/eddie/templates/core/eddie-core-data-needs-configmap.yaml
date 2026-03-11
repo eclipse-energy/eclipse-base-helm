@@ -1,0 +1,10 @@
+{{- if eq .Values.core.dataNeedsConfig.source "config" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-core-data-needs-configmap
+  {{- include "eddie.core.labels" . | indent 2 }}
+data:
+  data-needs.json: |-
+    {{ .Values.core.dataNeedsConfig.dataNeeds | toJson | nindent 4 }}
+{{- end }}

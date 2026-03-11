@@ -1,0 +1,13 @@
+{{- if and (eq .Values.core.enabled true) (eq .Values.regionConnectors.atEda.enabled true)  }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-core-ponton-pvc
+  {{- include "eddie.postgres.labels" . | indent 2 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.regionConnectors.atEda.pontonVolume.storageSize }}
+{{- end }}

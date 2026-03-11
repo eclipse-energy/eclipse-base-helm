@@ -1,0 +1,159 @@
+imagePullSecret:
+  name: ghcr-secret
+
+ingress:
+  host:
+  type: traefik
+  framework:
+    enabled: false
+    path: /eddie
+  management:
+    enabled: false
+    path: /eddie-management
+    basicAuth:
+      enabled: true
+      secretName: eddie-basic-auth
+  tls:
+    enabled: false
+    clusterIssuer:
+    secretName:
+
+postgres:
+  enabled: true # disable once before recoverObjectStore to delete cluster
+
+  image:
+    name: ghcr.io/cloudnative-pg/postgresql
+    version: 17.6
+
+  secret:
+    name: postgres-secret
+    usernameKey: username
+    passwordKey: password
+
+  instances: 1
+  bootstrapMode: initdb # initdb for creation, recoverObjectStore for recovery
+  database: eddie
+  owner: eddie_user
+  storageSize: 10Gi
+
+  objectStore:
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
+  recoveryObjectStore: # only required with bootstrapMode recoverObjectStore
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
+  backup:
+    enabled: true
+    schedule: "0 0 0 * * *"
+
+  customEnvs:
+
+core:
+  version: nightly-20260217
+  enabled: true
+  demoButton:
+    enabled: false
+  dataNeedsConfig:
+    source: config # or database
+    dataNeeds:
+    - id: "68ecd9c1-958c-4206-aee9-c97049778740"
+      type: "validated"
+      name: "Last year and next 3 years 15min to 1d"
+      description: "Example DataNeed"
+      purpose: "Example DataNeed"
+      policyLink: ""
+      duration:
+        type: "relativeDuration"
+        start: "P-1Y"
+        end: "P3Y"
+      energyType: "ELECTRICITY"
+      minGranularity: "PT15M"
+      maxGranularity: "P1D"
+
+  secret:
+    name: eddie-core-secret
+    jwtHmacSecretKey: jwtHmacSecret
+    kafkaJaasConfigKey: kafkaJaasConfig
+  management:
+    url:
+  extraEnv:
+
+
+
+regionConnectors:
+  secret:
+    name: eddie-region-connector-secrets
+  atEda:
+    enabled: false
+    eligiblePartyId:
+    pontonMessenger:
+      adapter:
+        id:
+        version:
+      hostname:
+      apiEndpoint:
+      port:
+      folder:
+    pontonVolume:
+      storageSize: 5Gi
+
+  simulation:
+    enabled: true
+
+kafka:
+  image:
+    name: docker.io/apache/kafka
+    version: 4.1.0
+  storageSize: 5Gi
+  enabled: true
+  externalPort: 9095
+  secret:
+    name: eddie-kafka-secret
+    keystoreKey: kafka.keystore.jks
+    keystorePasswordKey: keystorePassword
+    truststoreKey: kafka.truststore.jks
+    truststorePasswordKey: truststorePassword
+    superUsersKey: superUsers
+    adminPasswordKey: adminPassword
+    jaasConfigKey: kafka_server_jaas.conf
+    clientPropertiesKey: client.properties
+  acls:
+    create: true
+    users:
+    - name: eddie
+      consumeTopics:
+        - name: "fw.eclipse-prod"
+          group: "*"
+        - name: "ep.eclipse-prod"
+          group: "*"
+      produceTopics:
+        - name: "fw.eclipse-prod"
+        - name: "ep.eclipse-prod"
+
+outboundConnectors:
+  kafka:
+    enabled: true
+    format: xml
+    eddieId:
+
+  adminConsole:
+    enabled: false
+
+cluster:
+  name: dev

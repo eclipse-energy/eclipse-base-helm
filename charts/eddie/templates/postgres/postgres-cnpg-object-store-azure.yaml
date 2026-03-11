@@ -1,0 +1,36 @@
+{{- if eq .Values.postgres.enabled true }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-postgres
+  {{- include "eddie.postgres.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.postgres.objectStore.retentionPolicy }}
+  configuration:
+    destinationPath: {{ include "eddie.postgres.object-store.destination-path" .Values.postgres.objectStore }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgres.objectStore.azureSecret.name }}
+        key: {{ .Values.postgres.objectStore.azureSecret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.postgres.objectStore.compression }}
+---
+{{- if eq .Values.postgres.bootstrapMode "recoverObjectStore" }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-postgres-recover
+  {{- include "eddie.postgres.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.postgres.recoveryObjectStore.retentionPolicy }}
+  configuration:
+    destinationPath: {{ include "eddie.postgres.object-store.destination-path" .Values.postgres.recoveryObjectStore }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.postgres.recoveryObjectStore.azureSecret.name }}
+        key: {{ .Values.postgres.recoveryObjectStore.azureSecret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.postgres.recoveryObjectStore.compression }}
+---
+{{- end }}
+{{- end }}

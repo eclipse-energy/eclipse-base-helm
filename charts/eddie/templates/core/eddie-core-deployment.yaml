@@ -1,0 +1,68 @@
+{{- if eq .Values.core.enabled true }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-core
+  {{- include "eddie.core.labels" . | indent 2 }}
+spec:
+  replicas: 1 # Currently only single replica mode supported
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-core
+  template:
+    metadata:
+    {{- include "eddie.core.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: eddie-core
+          image: "ghcr.io/eddie-energy/eddie:{{ .Values.core.version }}"
+          ports:
+            - containerPort: 8080
+              name: api
+            - containerPort: 9090
+              name: management
+          env:
+            - name: EDDIE_PUBLIC_URL
+              value: "{{ if eq .Values.ingress.tls.enabled true }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}{{ .Values.ingress.framework.path }}"
+            - name: EDDIE_JWT_HMAC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.core.secret.name }}
+                  key: {{ .Values.core.secret.jwtHmacSecretKey }}
+            - name: SPRING_DATASOURCE_URL
+              value: {{ include "eddie.postgres-url" . }}
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secret.name }}
+                  key: {{ .Values.postgres.secret.usernameKey }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secret.name }}
+                  key: {{ .Values.postgres.secret.passwordKey }}
+            - name: EDDIE_MANAGEMENT_URL
+              value: {{ .Values.core.management.url }}
+            - name: EDDIE_MANAGEMENT_SERVER_PORT
+              value: "9090" # In Kubernetes there is no point in making this configurable since there will be no local port collisions
+            {{- include "eddie.core.data-needs.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.at-eda.envs" . | indent 12 }}
+            {{- include "eddie.outbound-connectors.admin-console.envs" . | indent 12 }}
+            {{- include "eddie.outbound-connectors.kafka.envs" . | indent 12 }}
+            - name: REGION_CONNECTOR_SIM_ENABLED
+              value: {{ .Values.regionConnectors.simulation.enabled | quote }}
+            {{- include "eddie.extraEnv" .Values.core.extraEnv | indent 12 }}
+
+      {{- if or (eq .Values.regionConnectors.atEda.enabled true) (eq .Values.core.dataNeedsConfig.source "config") }}
+          volumeMounts:
+            {{- include "eddie.core.data-needs.volume-mounts" . | indent 12 }}
+            {{- include "eddie.region-connectors.at-eda.volume-mounts" . | indent 12 }}
+
+      volumes:
+        {{- include "eddie.core.data-needs.volumes" . | indent 8 }}
+        {{- include "eddie.region-connectors.at-eda.volumes" . | indent 8 }}
+      {{- end }}
+
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
+{{- end }}
