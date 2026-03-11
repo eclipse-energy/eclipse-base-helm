@@ -48,7 +48,7 @@ Metadata for eddie components
 Helper to build the postgres Url
 */}}
 {{- define "eddie.postgres-url" -}}
-"jdbc:postgresql://{{ .Release.Name }}-postgres-rw:5432/{{ .Values.postgres.databaseName }}"
+"jdbc:postgresql://{{ .Release.Name }}-postgres-rw:5432/{{ .Values.postgres.database }}"
 {{- end }}
 
 {{- define "eddie.extraEnv" -}}
