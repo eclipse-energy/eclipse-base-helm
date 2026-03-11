@@ -57,3 +57,10 @@ Helper to build the postgres Url
   value: {{ .value | quote }}
 {{- end }}
 {{- end }}
+
+{{/*
+Azure Objectstore Destination Path helper
+*/}}
+{{- define "eddie.postgres.object-store.destination-path" -}}
+azure://{{ .blobStorage.storageName }}.blob.core.windows.net/{{ .blobStorage.containerName }}{{ if .blobStorage.blobName}}/{{ .blobStorage.blobName }}{{- end }}
+{{- end }}

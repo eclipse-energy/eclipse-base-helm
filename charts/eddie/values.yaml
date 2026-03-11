@@ -18,6 +18,52 @@ ingress:
     clusterIssuer:
     secretName:
 
+postgres:
+  enabled: true # disable once before recoverObjectStore to delete cluster
+
+  image:
+    name: ghcr.io/cloudnative-pg/postgresql
+    version: 17.6
+
+  secret:
+    name: postgres-secret
+    usernameKey: username
+    passwordKey: password
+
+  instances: 1
+  bootstrapMode: initdb # initdb for creation, recoverObjectStore for recovery
+  database: eddie
+  owner: eddie_user
+  storageSize: 10Gi
+
+  objectStore:
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
+  recoveryObjectStore: # only required with bootstrapMode recoverObjectStore
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
+  backup:
+    enabled: true
+    schedule: "0 0 0 * * *"
+
+  customEnvs:
+
 core:
   version: nightly-20260217
   enabled: true
@@ -48,31 +94,6 @@ core:
     url:
   extraEnv:
 
-postgres:
-  enabled: true
-  image:
-    name: ghcr.io/cloudnative-pg/postgresql
-    version: 17.6
-  replicaCount: 1
-  storageSize: 5Gi
-  username: eddie_user
-  databaseName: eddie
-  secret:
-    name: eddie-postgres-secret
-    usernameKey: username
-    passwordKey: password
-  backup:
-    enabled: true
-    schedule: "0 0 0 * * *"
-    retentionPolicy: 7d
-    compression: gzip
-  azure:
-    objectStore:
-      enabled: true
-    secret:
-      name: azure-secret
-      connectionStringKey: connectionString
-  customEnvs:
 
 
 regionConnectors:
