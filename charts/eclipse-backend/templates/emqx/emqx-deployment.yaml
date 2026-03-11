@@ -70,11 +70,11 @@ spec:
             - name: backend-emqx-config
               mountPath: /tmp/replace-password-with-env.sh
               subPath: replace-password-with-env.sh
-            - name: backend-emqx-config
-              subPath: server.crt
+            - name: {{ .Values.emqx.secret.name }}
+              subPath: {{ .Values.emqx.secret.serverCertKey }}
               mountPath: /opt/emqx/etc/certs/cert.pem
-            - name: backend-emqx-config
-              subPath: ca.crt
+            - name: {{ .Values.emqx.secret.name }}
+              subPath: {{ .Values.emqx.secret.caCertKey }}
               mountPath: /opt/emqx/etc/certs/cacert.pem
             - name: {{ .Values.emqx.secret.name }}
               subPath: {{ .Values.emqx.secret.sslKeyKey }}

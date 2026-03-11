@@ -1,28 +1,24 @@
-{{- if eq .Values.keycloak.enabled true }}
+{{- if and (eq .Values.keycloak.enabled true) (eq .Values.keycloak.postgres.enabled true) }}
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: {{ .Release.Name }}-keycloak-postgres
   {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
 spec:
-  instances: {{ .Values.keycloak.postgres.replicaCount }}
+  instances: {{ .Values.keycloak.postgres.instances }}
   imageName: {{ .Values.keycloak.postgres.image.name }}:{{ .Values.keycloak.postgres.image.version }}
-
   bootstrap:
-  {{- if .Values.keycloak.postgres.restore.enabled }}
-    recovery:
-      source: latest
-      method: plugin
-      pluginConfiguration:
-        name: barman-cloud.cloudnative-pg.io
-  {{- else }}
+    {{- if eq .Values.keycloak.postgres.bootstrapMode "initdb" }}
     initdb:
-      database: keycloak
-      owner: {{ .Values.keycloak.postgres.username }}
+    {{- end }}
+    {{- if eq .Values.keycloak.postgres.bootstrapMode "recoverObjectStore" }}
+    recovery:
+      source: recoverySource
+    {{- end }}
+      database: {{ .Values.keycloak.postgres.database }}
+      owner: {{ .Values.keycloak.postgres.owner }}
       secret:
         name: {{ .Values.keycloak.postgres.secret.name }}
-  {{- end }}
-
   storage:
     size: {{ .Values.keycloak.postgres.storageSize }}
 
@@ -30,5 +26,14 @@ spec:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters:
-        barmanObjectName: {{ .Release.Name }}-keycloak-postgres-azure
+        barmanObjectName: {{ $.Release.Name }}-keycloak-postgres
+
+  {{- if eq .Values.keycloak.postgres.bootstrapMode "recoverObjectStore" }}
+  externalClusters:
+    - name: recoverySource
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: {{ .Release.Name }}-keycloak-postgres-recover
+  {{- end }}
 {{- end }}

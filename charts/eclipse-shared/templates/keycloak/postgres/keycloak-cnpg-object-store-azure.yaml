@@ -1,17 +1,36 @@
-{{- if eq .Values.keycloak.enabled true }}
+{{- if and (eq .Values.keycloak.enabled true) (eq .Values.keycloak.postgres.enabled true) }}
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: {{ .Release.Name }}-keycloak-postgres-azure
+  name: {{ .Release.Name }}-keycloak-postgres
   {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
 spec:
-  retentionPolicy: {{ .Values.keycloak.postgres.backup.azure.retentionPolicy }}
+  retentionPolicy: {{ .Values.keycloak.postgres.objectStore.retentionPolicy }}
   configuration:
-    destinationPath: azure://{{ .Values.cluster.name }}/{{ .Release.Name }}/keycloak-postgres
+    destinationPath: {{ include "eclipse-shared.keycloak.postgres.object-store.destination-path" .Values.keycloak.postgres.objectStore }}
     azureCredentials:
       connectionString:
-        name: {{ .Values.keycloak.postgres.backup.azure.secret.name }}
-        key: {{ .Values.keycloak.postgres.backup.azure.secret.connectionStringKey }}
+        name: {{ .Values.keycloak.postgres.objectStore.azureSecret.name }}
+        key: {{ .Values.keycloak.postgres.objectStore.azureSecret.connectionStringKey }}
     wal:
-      compression: {{ .Values.keycloak.postgres.backup.azure.compression }}
+      compression: {{ .Values.keycloak.postgres.objectStore.compression }}
+---
+{{- if eq .Values.keycloak.postgres.bootstrapMode "recoverObjectStore" }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ .Release.Name }}-keycloak-postgres-recover
+  {{- include "eclipse-shared.keycloak.labels" . | indent 2 }}
+spec:
+  retentionPolicy: {{ .Values.keycloak.postgres.recoveryObjectStore.retentionPolicy }}
+  configuration:
+    destinationPath: {{ include "eclipse-shared.keycloak.postgres.object-store.destination-path" .Values.keycloak.postgres.recoveryObjectStore }}
+    azureCredentials:
+      connectionString:
+        name: {{ .Values.keycloak.postgres.recoveryObjectStore.azureSecret.name }}
+        key: {{ .Values.keycloak.postgres.recoveryObjectStore.azureSecret.connectionStringKey }}
+    wal:
+      compression: {{ .Values.keycloak.postgres.recoveryObjectStore.compression }}
+---
+{{- end }}
 {{- end }}

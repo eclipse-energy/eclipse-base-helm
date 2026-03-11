@@ -44,3 +44,9 @@ Metadata for eclipse-backend components.
   version: {{ .Chart.Version }}
 {{- end }}
 
+{{/*
+Azure Objectstore Destination Path helper
+*/}}
+{{- define "eclipse-backend.timescaledb.object-store.destination-path" -}}
+azure://{{ .blobStorage.storageName }}.blob.core.windows.net/{{ .blobStorage.containerName }}{{ if .blobStorage.blobName}}/{{ .blobStorage.blobName }}{{- end }}
+{{- end }}
