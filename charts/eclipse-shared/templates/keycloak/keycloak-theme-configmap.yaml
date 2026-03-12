@@ -340,7 +340,7 @@ data:
     }
   
   messages_en.properties: | 
-    usernameOrEmail=Email
+    usernameOrEmail=Username or Email
     noAccount=
     password=Password
     loginAccountTitle=Sign in
@@ -349,7 +349,7 @@ data:
     emailInstructionUsername=
 
   messages_de.properties: |
-    usernameOrEmail=E-Mail
+    usernameOrEmail=Benutzername oder E-Mail
     noAccount=
     password=Passwort
     loginAccountTitle=Anmelden
