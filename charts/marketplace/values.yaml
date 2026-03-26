@@ -1,0 +1,74 @@
+imagePullSecret:
+  name: ghcr-secret
+
+core:
+  enabled: true
+  image:
+    name: ghcr.io/eclipse-energy/marketplace
+    version: latest
+  config:
+    name: Marketplace
+  keycloak:
+    host:
+    realm:
+    clientId:
+  federator:
+    url:
+
+  ingress:
+    enabled: true
+    path: /eclipse-marketplace
+
+ingress:
+  host:
+  tls:
+    enabled: false
+    clusterIssuer:
+    secretName:
+
+postgres:
+  enabled: true # disable once before recoverObjectStore to delete cluster
+
+  image:
+    name: ghcr.io/cloudnative-pg/postgresql
+    version: 17.6
+
+  secret:
+    name: postgres-secret
+    usernameKey: username
+    passwordKey: password
+
+  instances: 1
+  bootstrapMode: initdb # initdb for creation, recoverObjectStore for recovery
+  database: marketplace
+  owner: marketplace_user
+  storageSize: 10Gi
+
+  objectStore:
+    enabled: true
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
+  recoveryObjectStore: # only required with bootstrapMode recoverObjectStore
+    blobStorage: # fill in values from azure
+      storageName:
+      containerName:
+      blobName:
+    retentionPolicy: 7d
+    compression: gzip
+    azureSecret:
+      name: azure-secret
+      connectionStringKey: connectionString
+
+  backup:
+    enabled: true
+    schedule: "0 0 0 * * *"
+
+  customEnvs:

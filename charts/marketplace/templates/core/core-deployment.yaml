@@ -1,0 +1,55 @@
+{{- if .Values.core.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-core
+  {{- include "marketplace.core.labels" . | indent 2 }}
+spec:
+  replicas: 1 # Only single replica is supported
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-core
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-core
+    spec:
+      containers:
+        - name: core
+          image: {{ .Values.core.image.name }}:{{ .Values.core.image.version }}
+          ports:
+            - name: marketplace
+              containerPort: 8080
+          env:
+            - name: POSTGRES_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-postgres-rw:5432/marketplace
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secret.name }}
+                  key: {{ .Values.postgres.secret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secret.name }}
+                  key: {{ .Values.postgres.secret.passwordKey }}
+            - name: KEYCLOAK_HOST
+              value: {{ .Values.core.keycloak.host }}
+            - name: KEYCLOAK_REALM
+              value: {{ .Values.core.keycloak.realm }}
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ .Values.core.keycloak.clientId }}
+            - name: MARKETPLACE_CONFIG_NAME
+              value: {{ .Values.core.config.name }}
+            - name: FEDERATOR_PUBLIC_URL
+              value: {{ .Values.core.federator.url }}
+            {{- if .Values.core.ingress.enabled }}
+            - name: MARKETPLACE_PUBLIC_URL
+              value: "{{ if .Values.ingress.tls.enabled }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}"
+            {{- end }}
+            {{- include "marketplace.core.envs.context-path" . | indent 12 }}
+            {{- include "marketplace.customEnvs" .Values.core.customEnvs | indent 12 }}
+
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
+{{- end }}
