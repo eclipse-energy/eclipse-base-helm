@@ -1,6 +1,17 @@
 ghcrImagePullSecrets:
   name: ghcr-secret
 
+mqtt:
+  host:
+  port:
+  username:
+  password:
+  heartbeat:
+    cron:
+  topicPrefix:
+    in:
+    out:
+
 core:
   enabled: true
   replicaCount: 1

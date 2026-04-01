@@ -35,6 +35,21 @@ spec:
                   name: {{ .Release.Name }}-timescaledb-secret
                   key: password
 
+            - name: DIGITAL_TWIN_MQTT_HOST
+              value: {{ .Values.mqtt.host }}
+            - name: DIGITAL_TWIN_MQTT_PORT
+              value: {{ .Values.mqtt.port | quote }}
+            - name: DIGITAL_TWIN_MQTT_USERNAME
+              value: {{ .Values.mqtt.username }}
+            - name: DIGITAL_TWIN_MQTT_PASSWORD
+              value: {{ .Values.mqtt.password }}
+            - name: DIGITAL_TWIN_MQTT_HEARTBEAT_CRON
+              value: {{ .Values.mqtt.heartbeat.cron }}
+            - name: DIGITAL_TWIN_MQTT_TOPIC_PREFIX_IN
+              value: {{ .Values.mqtt.topicPrefix.in }}
+            - name: DIGITAL_TWIN_MQTT_TOPIC_PREFIX_OUT
+              value: {{ .Values.mqtt.topicPrefix.out }}
+
             {{- if .Values.core.loggingLevel.root }}
             - name: LOGGING_LEVEL_ROOT
               value: {{ .Values.core.loggingLevel.root }}
