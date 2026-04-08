@@ -46,6 +46,9 @@ spec:
             - name: AIIDA_FEDERATOR_URL
               value: {{ .Values.core.federator.url }}
 
+            - name: AIIDA_MARKETPLACE_KEY_STORE_PATH
+              value: /keystore/keystore.jks
+
             - name: AIIDA_MESSAGE_BUS_INTERNAL_DB_URL
               value: jdbc:postgresql://{{ .Release.Name }}-timescaledb:5432/{{ .Values.internal.database }}
             - name: AIIDA_MESSAGE_BUS_INTERNAL_DB_SCHEMA
