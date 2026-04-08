@@ -1,0 +1,67 @@
+{{- if eq .Values.matter.enabled true }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-matter
+spec:
+  serviceName: {{ .Release.Name }}-matter
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-matter
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-matter
+    spec:
+      hostNetwork: true # <-- needed for mDNS discovery to work properly, otherwise, no Matter devices can be commissioned
+      containers:
+        - name: matter-server
+          image: {{ .Values.matter.server.image.name }}:{{ .Values.matter.server.image.version }}
+          ports:
+            - name: matter-server
+              containerPort: {{ .Values.matter.server.ports.ws }}
+          args:
+            - --storage-path
+            - {{ .Values.matter.server.storagePath }}
+            - --paa-root-cert-dir
+            - {{ .Values.matter.server.storagePath }}/credentials
+          volumeMounts:
+            - name: matter-server-data
+              mountPath: {{ .Values.matter.server.storagePath }}
+
+        - name: matter-bridge
+          image: {{ .Values.matter.bridge.image.name }}:{{ .Values.matter.bridge.image.version }}
+          ports:
+            - name: matter-bridge
+              containerPort: {{ .Values.matter.bridge.ports.http }}
+          env:
+            - name: DEVICE_STORAGE_PATH
+              value: {{ .Values.matter.bridge.deviceStoragePath }}
+            - name: MATTER_SERVER_URL
+              value: "ws://localhost:{{ .Values.matter.server.ports.ws }}/ws"
+            - name: AIIDA_API_URL
+              value: "http://{{ .Release.Name }}-core:{{ .Values.core.ports.configurationApi }}/api"
+          volumeMounts:
+            - name: matter-bridge-data
+              mountPath: {{ .Values.matter.bridge.deviceStoragePath }}
+
+      imagePullSecrets:
+        - name: {{ .Values.ghcrImagePullSecrets.name }}
+
+  volumeClaimTemplates:
+    - metadata:
+        name: matter-server-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.matter.server.storageSize }}
+    - metadata:
+        name: matter-bridge-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.matter.bridge.storageSize }}
+{{- end }}
