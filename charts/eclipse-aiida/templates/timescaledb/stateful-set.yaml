@@ -55,17 +55,11 @@ spec:
               port: timescaledb
 
       volumes:
+        - name: timescaledb-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-timescaledb-data
         - name: timescaledb-config
           configMap:
             name: {{ .Release.Name }}-timescaledb-configmap
             defaultMode: 0755
-
-  volumeClaimTemplates:
-    - metadata:
-        name: timescaledb-data
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: {{ .Values.timescaledb.storageSize }}
 {{- end }}

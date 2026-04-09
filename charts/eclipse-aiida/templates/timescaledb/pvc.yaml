@@ -1,0 +1,12 @@
+{{- if eq .Values.timescaledb.enabled true }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-timescaledb-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.timescaledb.storageSize }}
+{{- end }}
