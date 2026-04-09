@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 GHCR_USERNAME_ARG="--ghcr-username"
 GHCR_USERNAME=""
@@ -13,9 +13,9 @@ SERVICES_NAMESPACE_ARG="--services-namespace"
 SERVICES_NAMESPACE="aiida-services"
 
 display_help () {
-  echo -e "This script installs the required tools to deploy AIIDA on a k3s cluster."
+  echo -e "This script installs the required tools to deploy AIIDA on a minikube cluster (macOS)."
   echo -e "First enter secrets into the values file for the namespace you want to deploy to."
-  echo -e "Usage: setup.bash [OPTIONS]"
+  echo -e "Usage: setup-aiida-macos.bash [OPTIONS]"
   echo -e "Options:"
   echo -e "  --help\t\t\t\t\tDisplay this help message."
   echo -e "  --ghcr-username=<username>\t\t\tThe GitHub Container Registry username."
@@ -58,33 +58,48 @@ if [ -z "$GHCR_USERNAME" ] || [ -z "$GHCR_PAT" ]; then
   exit 1
 fi
 
-### INSTALL K3S
-curl -sfL https://get.k3s.io | sh -
-mkdir -p ~/.kube
-sudo chmod 644 /etc/rancher/k3s/k3s.yaml
-sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+### CHECK PREREQUISITES
+if ! command -v brew &> /dev/null; then
+  echo "Homebrew is required but not installed. Install it from https://brew.sh and re-run this script."
+  exit 1
+fi
+
+if ! docker info &> /dev/null; then
+  echo "Docker Desktop is not running. Please start Docker Desktop and re-run this script."
+  exit 1
+fi
+
+### INSTALL TOOLS
+if ! command -v minikube &> /dev/null; then
+  brew install minikube
+fi
+
+if ! command -v kubectl &> /dev/null; then
+  brew install kubectl
+fi
+
+if ! command -v helm &> /dev/null; then
+  brew install helm
+fi
+
+if ! command -v k9s &> /dev/null; then
+  brew install k9s
+fi
+
+### START MINIKUBE
+minikube start --driver=docker
+minikube addons enable ingress
 
 export KUBECONFIG=~/.kube/config
 
-### INSTALL KUBECTL
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-rm kubectl
-
-### CREATE NAMESPACE
-kubectl create namespace "$NAMESPACE"
-kubectl create namespace "$SERVICES_NAMESPACE"
-
-### INSTALL HELM
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-chmod 700 get_helm.sh
-./get_helm.sh
-rm get_helm.sh
+### CREATE NAMESPACES
+kubectl get namespace "$NAMESPACE" &> /dev/null || kubectl create namespace "$NAMESPACE"
+kubectl get namespace "$SERVICES_NAMESPACE" &> /dev/null || kubectl create namespace "$SERVICES_NAMESPACE"
 
 ### INSTALL CERT-MANAGER
 helm repo add jetstack https://charts.jetstack.io --force-update
 
-helm install cert-manager \
+helm upgrade --install cert-manager \
   --namespace cert-manager \
   --create-namespace \
   --set crds.enabled=true \
@@ -92,16 +107,26 @@ helm install cert-manager \
 
 ### CREATE GHCR SECRET
 kubectl -n "$NAMESPACE" create secret docker-registry ghcr-secret \
-	  --docker-server=ghcr.io \
-	  --docker-username="$GHCR_USERNAME" \
-	  --docker-password="$GHCR_PAT"
+    --docker-server=ghcr.io \
+    --docker-username="$GHCR_USERNAME" \
+    --docker-password="$GHCR_PAT" \
+    --dry-run=client -o yaml | kubectl apply -f -
 
 ### INSTALL AIIDA INSTALLER
 helm repo add eclipse "https://eclipse-energy.github.io/eclipse-base-helm/$TRACK" --force-update
 
-helm install aiida-installer \
+HELM_VALUES_FLAG=""
+if [ -n "$VALUES" ]; then
+  HELM_VALUES_FLAG="--values $VALUES"
+fi
+
+helm upgrade --install aiida-installer \
   --namespace "$NAMESPACE" \
   --set aiidaServices.namespace="$SERVICES_NAMESPACE" \
   --set core.repositoryTrack="$TRACK" \
-  --values "$VALUES" \
+  $HELM_VALUES_FLAG \
   eclipse/eclipse-aiida-installer
+
+### START MINIKUBE TUNNEL (exposes LoadBalancer services on localhost:80)
+echo "Starting minikube tunnel — this requires sudo and will run in the background."
+sudo minikube tunnel &
