@@ -1,15 +1,37 @@
-# AIIDA Setup Scripts
+# Eclipse Base Helm
 
-This directory contains scripts to deploy AIIDA on a Kubernetes cluster.
+This repository contains the **Helm charts** for Eclipse. The charts are packaged and published as a Helm repository, which is the primary purpose of this repo. The setup scripts in this directory are a convenience for running AIIDA locally.
 
-## Scripts
+## Helm Charts
+
+Charts are located in the `charts/` directory. Each chart has a `Makefile` with the following targets:
+
+| Command | Description |
+|---|---|
+| `make package` | Packages the chart into `repository/<track>/packages/` |
+| `make index` | Regenerates `repository/<track>/index.yaml` for the Helm repository |
+
+Run these commands from inside the desired chart directory, e.g. `charts/eclipse-aiida`.
+
+The `TRACK` variable controls which track is targeted (default: `stable`):
+
+```bash
+make package TRACK=stable
+make index   TRACK=stable
+```
+
+---
+
+## Local Setup Scripts
+
+The setup scripts install all required tooling and deploy AIIDA on a local Kubernetes cluster. They are intended for local development and testing.
 
 | Script | Platform | Kubernetes |
 |---|---|---|
 | `setup-aiida.bash` | Linux | k3s |
 | `setup-aiida-macos.bash` | macOS | minikube (Docker Desktop) |
 
-## Usage
+### Usage
 
 ```bash
 ./setup-aiida.bash \
@@ -33,28 +55,38 @@ This directory contains scripts to deploy AIIDA on a Kubernetes cluster.
 | `--values` | Path to a custom Helm values file | none |
 | `--services-namespace` | Namespace for AIIDA services | `aiida-services` |
 
+---
+
 ## Differences between Linux and macOS
 
 ### Kubernetes distribution
 
-The Linux script installs **k3s**, a lightweight Kubernetes distribution that runs directly on the host.
-macOS does not support k3s, so the macOS script uses **minikube** with the Docker driver, which runs the cluster inside a Docker container.
+| | Linux | macOS |
+|---|---|---|
+| Distribution | k3s (runs directly on host) | minikube (runs inside Docker) |
+| Extra prerequisite | — | Docker Desktop + Homebrew |
 
-**macOS prerequisite:** Docker Desktop must be installed and running before executing the script.
+The Linux script installs **k3s** directly on the host. macOS does not support k3s, so the macOS script uses **minikube** with the Docker driver.
 
 ### Tool installation
 
-On Linux, `kubectl` is downloaded as a binary and installed via the system `install` command.
-On macOS, all tools (`minikube`, `kubectl`, `helm`, `k9s`) are installed via **Homebrew**. Each tool is only installed if not already present.
+| | Linux | macOS |
+|---|---|---|
+| `kubectl` | Downloaded as binary, installed via system `install` | Installed via Homebrew |
+| `helm` | Installed via official `get-helm-3` script | Installed via Homebrew |
+| `k9s` | — | Installed via Homebrew |
 
-**macOS prerequisite:** Homebrew must be installed (`https://brew.sh`).
+On macOS, each tool is only installed if not already present.
 
 ### Service exposure
 
 On Linux, k3s services are directly accessible on the host network.
-On macOS, the script starts a **minikube tunnel** in the background after installation, which exposes LoadBalancer services (including the ingress on port 80) on `127.0.0.1`.
 
-Once the tunnel is running, AIIDA is reachable at: `http://localhost/aiida`
+On macOS, the script starts a **minikube tunnel** in the background after installation, which exposes LoadBalancer services on `127.0.0.1`. Once running, AIIDA is reachable at:
+
+```
+http://localhost/aiida
+```
 
 ### Idempotency
 

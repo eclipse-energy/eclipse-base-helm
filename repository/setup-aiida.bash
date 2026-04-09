@@ -101,7 +101,7 @@ helm repo add eclipse "https://eclipse-energy.github.io/eclipse-base-helm/$TRACK
 
 helm install aiida-installer \
   --namespace "$NAMESPACE" \
-  --set core.services.namespace="$SERVICES_NAMESPACE" \
-  --set core.services.repositoryTrack="$TRACK" \
+  --set aiidaServices.namespace="$SERVICES_NAMESPACE" \
+  --set core.repositoryTrack="$TRACK" \
   --values "$VALUES" \
   eclipse/eclipse-aiida-installer

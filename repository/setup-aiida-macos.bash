@@ -122,8 +122,8 @@ fi
 
 helm upgrade --install aiida-installer \
   --namespace "$NAMESPACE" \
-  --set core.services.namespace="$SERVICES_NAMESPACE" \
-  --set core.services.repositoryTrack="$TRACK" \
+  --set aiidaServices.namespace="$SERVICES_NAMESPACE" \
+  --set core.repositoryTrack="$TRACK" \
   $HELM_VALUES_FLAG \
   eclipse/eclipse-aiida-installer
 
