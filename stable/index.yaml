@@ -3,9 +3,9 @@ entries:
   digital-twin:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-04-15T08:06:14.691753495+02:00"
+    created: "2026-04-15T11:31:21.112172868+02:00"
     description: Helm Chart of Eclipse Digital Twin Service
-    digest: 501d198ed503bbd4ff2ce15d701cb7934c2673f49d3c3f9e45f1c331f21ab56d
+    digest: 1644caa8790c07cc104d4e3969ed922be9d0c95418ff1f8a7fee0b5f580d2c04
     name: digital-twin
     type: application
     urls:
@@ -13,7 +13,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-04-15T08:06:14.691253038+02:00"
+    created: "2026-04-15T11:31:21.111957074+02:00"
     description: Helm Chart of Eclipse Digital Twin Service
     digest: 61674a005e0cdbc3c1da9f2b0edda997bb709ac8a97c4ecd6363ecfff09ede9a
     name: digital-twin
@@ -24,7 +24,7 @@ entries:
   eclipse-aiida:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-04-15T08:06:14.693008279+02:00"
+    created: "2026-04-15T11:31:21.113232176+02:00"
     description: Helm Chart of ECLIPSE AIIDA
     digest: f1caa0f28cf65111a28f43bf5ab8dcd54994e2f52bded3234a3ac85ce42e768d
     name: eclipse-aiida
@@ -34,7 +34,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-04-15T08:06:14.69251939+02:00"
+    created: "2026-04-15T11:31:21.1128273+02:00"
     description: Helm Chart of ECLIPSE AIIDA
     digest: 2050bdf4199218a64ef7d2cae016e0900940bec240bc6479a10c6b1a113c71b7
     name: eclipse-aiida
@@ -45,7 +45,7 @@ entries:
   eclipse-aiida-installer:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-04-15T08:06:14.693502373+02:00"
+    created: "2026-04-15T11:31:21.113697025+02:00"
     description: Helm chart of the AIIDA installer
     digest: ecbfff2c8c14947f0dd6e38061bb5978ed3eaa7267b3228ffa3f8f29897943d7
     name: eclipse-aiida-installer
@@ -56,7 +56,7 @@ entries:
   eclipse-backend:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.709292715+02:00"
+    created: "2026-04-15T11:31:21.133530056+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 2050fdea91955649a8725003d117f9b1c1fe2b4c0d9c4409fcdcec6742e92deb
     name: eclipse-backend
@@ -66,7 +66,7 @@ entries:
     version: 0.0.26
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.70800067+02:00"
+    created: "2026-04-15T11:31:21.132297049+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 1d0e31fff6ad7b1470693ed039ffc06285827f5bebcab979d426c3d608a18635
     name: eclipse-backend
@@ -76,7 +76,7 @@ entries:
     version: 0.0.25
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.707251743+02:00"
+    created: "2026-04-15T11:31:21.131355313+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 8fc654630f20e8b26d2f0d3c78240c43d1241f62df487c51087b13a38666f2bb
     name: eclipse-backend
@@ -86,7 +86,7 @@ entries:
     version: 0.0.24
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.706133259+02:00"
+    created: "2026-04-15T11:31:21.130376024+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 87b58774142d129817f03245b796577a38a66b3d1303a1793d2de646630658df
     name: eclipse-backend
@@ -96,7 +96,7 @@ entries:
     version: 0.0.23
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.704900343+02:00"
+    created: "2026-04-15T11:31:21.128688182+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 34952036af9ada72b36563aa690c196840e525edd7de7c50ea8fe074416cab74
     name: eclipse-backend
@@ -106,7 +106,7 @@ entries:
     version: 0.0.22
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.704107109+02:00"
+    created: "2026-04-15T11:31:21.127967406+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: fbd4766106cd46a5aa4047085c97e3df4e582ed0eaf427bbbef1370664c53589
     name: eclipse-backend
@@ -116,7 +116,7 @@ entries:
     version: 0.0.21
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.703331841+02:00"
+    created: "2026-04-15T11:31:21.127278183+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 189fa70b6df3c2daedc1a7553977a9ac42d73bd5e2a23b388da0078055dbe0a3
     name: eclipse-backend
@@ -126,7 +126,7 @@ entries:
     version: 0.0.20
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.701744028+02:00"
+    created: "2026-04-15T11:31:21.126050828+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: beb88239c8509b301cfe326a20a82a61314aab223efb98d7e42a698cb878830a
     name: eclipse-backend
@@ -136,7 +136,7 @@ entries:
     version: 0.0.19
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.700712221+02:00"
+    created: "2026-04-15T11:31:21.125382726+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 63ea6d85df4c70872889c95ff7b72f39ca63caa9ef88daf23d2faef57f5b8f8f
     name: eclipse-backend
@@ -146,7 +146,7 @@ entries:
     version: 0.0.18
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.699978501+02:00"
+    created: "2026-04-15T11:31:21.124765671+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 3e803e171f8ac33bb46ee4638d4f5ae94c64ace84f8b8d7d8b8c97db0a31fa78
     name: eclipse-backend
@@ -156,7 +156,7 @@ entries:
     version: 0.0.17
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.699205208+02:00"
+    created: "2026-04-15T11:31:21.123805742+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 188f5a21748c2ba60ff18e0cc326b44bed24f394348b221dc38cb21ea97f3e10
     name: eclipse-backend
@@ -166,7 +166,7 @@ entries:
     version: 0.0.16
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.698260123+02:00"
+    created: "2026-04-15T11:31:21.122813096+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 7f5c21afe7eb157eb2f00823fbc30cd48afcc4c76f94e23d05523bcd08d70bf1
     name: eclipse-backend
@@ -176,7 +176,7 @@ entries:
     version: 0.0.15
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.697201913+02:00"
+    created: "2026-04-15T11:31:21.120905736+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: d2bb4e385edf456f95a874b1e5e63a3ae25b13d92c5dffa291362ccb881adf81
     name: eclipse-backend
@@ -186,7 +186,7 @@ entries:
     version: 0.0.14
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.696558861+02:00"
+    created: "2026-04-15T11:31:21.118253599+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 52aa9492298f01acf487e1bc7cb95c77ec9eeb08fa438b61cd6b61cf86f59a7a
     name: eclipse-backend
@@ -196,7 +196,7 @@ entries:
     version: 0.0.13
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.695957065+02:00"
+    created: "2026-04-15T11:31:21.11703495+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 21b1887a5114bc708313b1b2daecc3a15f89bed8a06798e1360f25543c1b9368
     name: eclipse-backend
@@ -206,7 +206,7 @@ entries:
     version: 0.0.12
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.69527661+02:00"
+    created: "2026-04-15T11:31:21.116099404+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 1f01c9afdd7a88dcaecd8762cc77d8118542560c7f8cad8f90e0cc58bccb1b74
     name: eclipse-backend
@@ -216,7 +216,7 @@ entries:
     version: 0.0.11
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.694578398+02:00"
+    created: "2026-04-15T11:31:21.11519624+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: b2977f41634ef20414207ca5da703027ee26f5bc3b7621cc4278679378d51db4
     name: eclipse-backend
@@ -226,7 +226,7 @@ entries:
     version: 0.0.10
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.71367397+02:00"
+    created: "2026-04-15T11:31:21.138452863+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 854ac1bc45eadcb6dfcb0794b853c44f5e1a7d04f7f298e8fa383585043bad72
     name: eclipse-backend
@@ -236,7 +236,7 @@ entries:
     version: 0.0.9
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.712679042+02:00"
+    created: "2026-04-15T11:31:21.137552786+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 385eb747fbbfa1095c52469e367e2e684d9730f376cf224f7447c33ee88f70cc
     name: eclipse-backend
@@ -246,7 +246,7 @@ entries:
     version: 0.0.8
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.712027254+02:00"
+    created: "2026-04-15T11:31:21.136935905+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: ab7ebf861dc62ad4c7569ea52b59dc428e0743f09c97cfa81b655a583e0a56bc
     name: eclipse-backend
@@ -256,7 +256,7 @@ entries:
     version: 0.0.7
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.711507429+02:00"
+    created: "2026-04-15T11:31:21.136417531+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 35278afa6c594db1a43cf4ad5182861c9897e072e26998cb52af07dd1b7e9d75
     name: eclipse-backend
@@ -266,7 +266,7 @@ entries:
     version: 0.0.6
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.711098651+02:00"
+    created: "2026-04-15T11:31:21.135973025+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 0f3ef2e927f94f8bf68de0f12d5b75db4bee25eb85566acab1d113b3efa8799e
     name: eclipse-backend
@@ -276,7 +276,7 @@ entries:
     version: 0.0.5
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.710567839+02:00"
+    created: "2026-04-15T11:31:21.135483404+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 02a4338542590aa1ff9b5dba31d662a251deb604b75c1d828b825da868e10946
     name: eclipse-backend
@@ -286,7 +286,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.70982196+02:00"
+    created: "2026-04-15T11:31:21.134663066+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 1d2099300c82479daf66bfbd2157d9483306b2ce9cfccf9ab5247c095550f631
     name: eclipse-backend
@@ -296,7 +296,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.702382264+02:00"
+    created: "2026-04-15T11:31:21.126520404+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 4c0a6c3066b0bb0ed2063247c91436292388fdce79e83a78b97d24fdf87f264c
     name: eclipse-backend
@@ -306,7 +306,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.693842523+02:00"
+    created: "2026-04-15T11:31:21.114080187+02:00"
     description: Helm Chart of the ECLIPSE Backend
     digest: 19d3464f3277b04771b4533795e020d1bb7c2e7ebd80903d123d1142a031dd51
     name: eclipse-backend
@@ -317,7 +317,7 @@ entries:
   eclipse-shared:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.955612387+02:00"
+    created: "2026-04-15T11:31:21.306636882+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -340,7 +340,7 @@ entries:
     version: 0.0.19
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.91085019+02:00"
+    created: "2026-04-15T11:31:21.289099752+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -363,7 +363,7 @@ entries:
     version: 0.0.18
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.86973223+02:00"
+    created: "2026-04-15T11:31:21.271567372+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -386,7 +386,7 @@ entries:
     version: 0.0.17
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.842324435+02:00"
+    created: "2026-04-15T11:31:21.257644751+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -409,7 +409,7 @@ entries:
     version: 0.0.16
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.816542562+02:00"
+    created: "2026-04-15T11:31:21.241253249+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -432,7 +432,7 @@ entries:
     version: 0.0.15
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.800500019+02:00"
+    created: "2026-04-15T11:31:21.226518672+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -455,7 +455,7 @@ entries:
     version: 0.0.14
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.783389044+02:00"
+    created: "2026-04-15T11:31:21.211300139+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -478,7 +478,7 @@ entries:
     version: 0.0.13
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.761473787+02:00"
+    created: "2026-04-15T11:31:21.183461506+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -501,7 +501,7 @@ entries:
     version: 0.0.12
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.735900157+02:00"
+    created: "2026-04-15T11:31:21.153662081+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -516,7 +516,7 @@ entries:
     version: 0.0.11
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.719926225+02:00"
+    created: "2026-04-15T11:31:21.146768994+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -531,7 +531,7 @@ entries:
     version: 0.0.10
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.986719484+02:00"
+    created: "2026-04-15T11:31:21.322058584+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -546,7 +546,7 @@ entries:
     version: 0.0.9
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.982630262+02:00"
+    created: "2026-04-15T11:31:21.317582823+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -561,7 +561,7 @@ entries:
     version: 0.0.8
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.977925993+02:00"
+    created: "2026-04-15T11:31:21.314887363+02:00"
     dependencies:
     - condition: grafana.enabled
       name: grafana
@@ -576,7 +576,7 @@ entries:
     version: 0.0.7
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.973286443+02:00"
+    created: "2026-04-15T11:31:21.312131128+02:00"
     description: Helm Chart of Shared components for ECLIPSE
     digest: bffd2aadb4062a1945f6a78b622ceb1c16eb86f03003c526fe4bc6abedcc839c
     name: eclipse-shared
@@ -586,7 +586,7 @@ entries:
     version: 0.0.6
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.972346974+02:00"
+    created: "2026-04-15T11:31:21.311515117+02:00"
     description: Helm Chart of Shared components for ECLIPSE
     digest: f45880e82c671cd260eab866a25806bc83d7baba5b62c57fb4895b4225dd3a40
     name: eclipse-shared
@@ -596,7 +596,7 @@ entries:
     version: 0.0.5
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.971569164+02:00"
+    created: "2026-04-15T11:31:21.311039012+02:00"
     description: Helm Chart of Shared components for ECLIPSE
     digest: d7df4590728ad03227039b6c8732f8573da205bf80529d83ec6271c37157633b
     name: eclipse-shared
@@ -606,7 +606,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.970341718+02:00"
+    created: "2026-04-15T11:31:21.310543734+02:00"
     description: Helm Chart of Shared components for ECLIPSE
     digest: f61fc9fc13dd310fee51ccccca85c31055fe38f771a383f938d70c0efbc7ba89
     name: eclipse-shared
@@ -616,7 +616,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.968857885+02:00"
+    created: "2026-04-15T11:31:21.308790286+02:00"
     description: Helm Chart of Shared components for ECLIPSE
     digest: 1783078f5acfec44d5ed875595bdfc992dbbc5f29c31e94981fe8524482b213e
     name: eclipse-shared
@@ -626,7 +626,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-04-15T08:06:14.714700694+02:00"
+    created: "2026-04-15T11:31:21.139203636+02:00"
     description: Helm Chart of Shared components for ECLIPSE
     digest: 8003426041822411debfb0ca62f61a26c6947647b83416a1a8f134cfa99e1392
     name: eclipse-shared
@@ -637,7 +637,7 @@ entries:
   eddie:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.989012379+02:00"
+    created: "2026-04-15T11:31:21.323804309+02:00"
     description: EDDIE Helm Chart
     digest: e213843eb2ca8ae25992e95da1bc568103bfa15f15d6f7376994b436678a17dc
     name: eddie
@@ -647,7 +647,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.987861654+02:00"
+    created: "2026-04-15T11:31:21.323068865+02:00"
     description: EDDIE Helm Chart
     digest: 43eb0d4df2bde0381292b47398b9dfb538de346660bbe931c98cc17ac96e93c0
     name: eddie
@@ -658,7 +658,7 @@ entries:
   federator:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.993168975+02:00"
+    created: "2026-04-15T11:31:21.325962096+02:00"
     description: Federator Helm Chart
     digest: 3fa2234da8408e6b0c5d66b07f3acd0d2cfe63bbd72aeb682f10604165c79df6
     name: federator
@@ -668,7 +668,7 @@ entries:
     version: 0.0.6
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.992023267+02:00"
+    created: "2026-04-15T11:31:21.325602163+02:00"
     description: Federator Helm Chart
     digest: d68c6576677eb4063b7953de4f48335c48a81ac6e16b908dbd4341bbee24a51e
     name: federator
@@ -678,7 +678,7 @@ entries:
     version: 0.0.5
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.991502145+02:00"
+    created: "2026-04-15T11:31:21.325347474+02:00"
     description: Federator Helm Chart
     digest: 43b35938965f1a11c48b4eaffff50b945c0d3ad59b2282ed261fa8bdcfe5b494
     name: federator
@@ -688,7 +688,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.990960891+02:00"
+    created: "2026-04-15T11:31:21.324908493+02:00"
     description: Federator Helm Chart
     digest: bbb81b843104133d4c0356dc974388c7a3e84542b2810c7455d3300dcb6f6c9b
     name: federator
@@ -698,7 +698,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.990365991+02:00"
+    created: "2026-04-15T11:31:21.324584603+02:00"
     description: Federator Helm Chart
     digest: 799e90249bb149373f740400645430be49ec76cc1c838aff9db0c8a1a46f2083
     name: federator
@@ -708,7 +708,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.989542426+02:00"
+    created: "2026-04-15T11:31:21.324161947+02:00"
     description: Federator Helm Chart
     digest: 7ac899ca8d93279f55e0d5f45c55854cd4db88d6f3a58f1b38f3781b6c56b61f
     name: federator
@@ -719,7 +719,7 @@ entries:
   marketplace:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-15T08:06:14.993769721+02:00"
+    created: "2026-04-15T11:31:21.326435739+02:00"
     description: A Helm chart for the Marketplace
     digest: 409adafed1ac870e5189e1caa278375d5a0ab21a492c842a2e412b859e1c53d9
     name: marketplace
@@ -727,4 +727,4 @@ entries:
     urls:
     - https://eclipse-energy.github.io/eclipse-base-helm/stable/packages/marketplace-0.0.1.tgz
     version: 0.0.1
-generated: "2026-04-15T08:06:14.687625185+02:00"
+generated: "2026-04-15T11:31:21.107531615+02:00"
