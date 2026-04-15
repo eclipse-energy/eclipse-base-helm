@@ -96,6 +96,11 @@ kubectl -n "$NAMESPACE" create secret docker-registry ghcr-secret \
 	  --docker-username="$GHCR_USERNAME" \
 	  --docker-password="$GHCR_PAT"
 
+kubectl -n "$SERVICES_NAMESPACE" create secret docker-registry ghcr-secret \
+	  --docker-server=ghcr.io \
+	  --docker-username="$GHCR_USERNAME" \
+	  --docker-password="$GHCR_PAT"
+
 ### INSTALL AIIDA INSTALLER
 helm repo add eclipse "https://eclipse-energy.github.io/eclipse-base-helm/$TRACK" --force-update
 
