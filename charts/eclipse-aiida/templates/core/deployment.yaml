@@ -112,6 +112,9 @@ spec:
                   name: {{ .Release.Name }}-external-secret
                   key: mqttPassword
 
+            - name: AIIDA_INSTALLATION_SERVICE_MQTT_HOST
+              value: {{ .Release.Name }}-internal.{{ .Release.Namespace }}
+
             {{- if .Values.core.loggingLevel.root }}
             - name: LOGGING_LEVEL_ROOT
               value: {{ .Values.core.loggingLevel.root }}
