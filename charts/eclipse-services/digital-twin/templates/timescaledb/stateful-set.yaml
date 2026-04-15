@@ -35,6 +35,10 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}-timescaledb-secret
                   key: password
+          volumeMounts:
+            - name: timescaledb-data
+              mountPath: /var/lib/postgresql/data
+
           readinessProbe:
             tcpSocket:
               port: timescaledb
