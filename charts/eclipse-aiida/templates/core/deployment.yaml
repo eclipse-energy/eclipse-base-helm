@@ -42,6 +42,11 @@ spec:
 
             - name: AIIDA_INSTALLER_URL
               value: {{ .Values.core.installer.url }}
+            - name: AIIDA_INSTALLER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-core-secret
+                  key: installerToken
 
             - name: AIIDA_FEDERATOR_URL
               value: {{ .Values.core.federator.url }}
