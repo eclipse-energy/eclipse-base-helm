@@ -40,9 +40,15 @@ spec:
             - name: DIGITAL_TWIN_MQTT_PORT
               value: {{ .Values.mqtt.port | quote }}
             - name: DIGITAL_TWIN_MQTT_USERNAME
-              value: {{ .Values.mqtt.username }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-core-secret
+                  key: mqttUsername
             - name: DIGITAL_TWIN_MQTT_PASSWORD
-              value: {{ .Values.mqtt.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-core-secret
+                  key: mqttPassword
             - name: DIGITAL_TWIN_MQTT_HEARTBEAT_CRON
               value: {{ .Values.mqtt.heartbeat.cron }}
             - name: DIGITAL_TWIN_MQTT_TOPIC_PREFIX_IN
