@@ -22,7 +22,7 @@ spec:
           image: {{ .Values.core.image.name }}:{{ .Values.core.image.version }}
           ports:
             - name: core
-              containerPort: 8080
+              containerPort: 8081
           env:
             - name: AIIDA_PUBLIC_URL
               value: "{{ include "eclipse-aiida.core.external-host" . }}"
