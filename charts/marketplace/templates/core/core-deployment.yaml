@@ -45,7 +45,7 @@ spec:
               value: {{ .Values.core.federator.url }}
             {{- if .Values.core.ingress.enabled }}
             - name: MARKETPLACE_PUBLIC_URL
-              value: "{{ if .Values.ingress.tls.enabled }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}"
+              value: "{{ if .Values.ingress.tls.enabled }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}{{ .Values.core.ingress.path }}"
             {{- end }}
             {{- include "marketplace.core.envs.context-path" . | indent 12 }}
             {{- include "marketplace.customEnvs" .Values.core.customEnvs | indent 12 }}
