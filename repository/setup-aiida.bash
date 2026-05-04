@@ -11,6 +11,8 @@ VALUES=""
 NAMESPACE="aiida"
 SERVICES_NAMESPACE_ARG="--services-namespace"
 SERVICES_NAMESPACE="aiida-services"
+ARCHITECTURE_ARG="--architecture"
+ARCHITECTURE=${ARCHITECTURE:-"arm64"}
 
 display_help () {
   echo -e "This script installs the required tools to deploy AIIDA on a k3s cluster."
@@ -23,6 +25,7 @@ display_help () {
   echo -e "  --services-namespace=<services-namespace>\tThe namespace for the services. Default is 'aiida-services'."
   echo -e "  --track=<track>\t\t\t\tThe track to install. Default is 'stable'."
   echo -e "  --values=<values>\t\t\t\tThe values file to use for the installation. Default is none."
+  echo -e "  --architecture=<architecture>\t\t\t\tThe architecture to use for the installation. Default is 'arm64'."
 }
 
 for arg in "$@"; do
@@ -61,13 +64,13 @@ fi
 ### INSTALL K3S
 curl -sfL https://get.k3s.io | sh -
 mkdir -p ~/.kube
-sudo chmod 644 /etc/rancher/k3s/k3s.yaml
 sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chmod 644 ~/.kube/config
 
 export KUBECONFIG=~/.kube/config
 
 ### INSTALL KUBECTL
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/$ARCHITECTURE/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 rm kubectl
 
