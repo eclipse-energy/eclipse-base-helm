@@ -132,8 +132,10 @@ MQTT Environments
 */}}
 {{- define "eclipse-backend.core.envs.mqtt" }}
 {{- if eq .Values.emqx.enabled true }}
-- name: ECLIPSE_MQTT_SERVER_URI
-  value: "tcp://{{ .Release.Name }}-emqx:1883"
+- name: ECLIPSE_MQTT_HOST
+  value: "{{ .Release.Name }}-emqx"
+- name: ECLIPSE_MQTT_PORT
+  value: 1883
 - name: ECLIPSE_MQTT_USERNAME
   value: "eclipse"
 - name: ECLIPSE_MQTT_PASSWORD
