@@ -135,7 +135,7 @@ MQTT Environments
 - name: ECLIPSE_MQTT_HOST
   value: "{{ .Release.Name }}-emqx"
 - name: ECLIPSE_MQTT_PORT
-  value: 1883
+  value: "1883"
 - name: ECLIPSE_MQTT_USERNAME
   value: "eclipse"
 - name: ECLIPSE_MQTT_PASSWORD
